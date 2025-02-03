@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\game_of_life.dir\\src\\main.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\main.cpp",
+  "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/main.cpp",
+  "output": "CMakeFiles/game_of_life.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\game_of_life.dir\\src\\GameOfLife.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\GameOfLife.cpp",
+  "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/GameOfLife.cpp",
+  "output": "CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.obj"
+}
+]
