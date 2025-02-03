@@ -250,6 +250,12 @@ GameOfLifeHPC_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 GameOfLifeHPC_SOURCE_DIR:STATIC=C:/Users/Asimov/Desktop/develop/conways-opencl
 
+//Path to a file.
+OpenCL_INCLUDE_DIR:PATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include
+
+//Path to a library.
+OpenCL_LIBRARY:FILEPATH=C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/lib/x64/OpenCL.lib
+
 
 ########################
 # INTERNAL cache entries
@@ -413,6 +419,14 @@ CMAKE_STRIP-ADVANCED:INTERNAL=1
 CMAKE_TAPI-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding OpenCL
+FIND_PACKAGE_MESSAGE_DETAILS_OpenCL:INTERNAL=[C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/lib/x64/OpenCL.lib][C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include][v3.0()]
+//Have symbol CL_VERSION_3_0
+OPENCL_VERSION_3_0:INTERNAL=1
+//ADVANCED property for variable: OpenCL_INCLUDE_DIR
+OpenCL_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OpenCL_LIBRARY
+OpenCL_LIBRARY-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_CXX_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 //linker supports push/pop state

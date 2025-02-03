@@ -15,7 +15,8 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -30,7 +31,8 @@
 					"name" : "GameOfLifeHPC",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -39,8 +41,15 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "game_of_life::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-game_of_life-Debug-1ae1e3505a1ea81a0cd0.json",
+					"jsonFile" : "target-game_of_life-Debug-6b443bd222df14cf2d8b.json",
 					"name" : "game_of_life",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "gol_opencl::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-gol_opencl-Debug-7856519cd4b03f4b50a7.json",
+					"name" : "gol_opencl",
 					"projectIndex" : 0
 				}
 			]

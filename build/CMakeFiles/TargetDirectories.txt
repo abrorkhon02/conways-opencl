@@ -1,3 +1,4 @@
 C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/game_of_life.dir
+C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/gol_opencl.dir
 C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/edit_cache.dir
 C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/rebuild_cache.dir

@@ -1,4 +1,6 @@
 #include "../include/GameOfLife.h"
+#include <fstream>
+#include <stdexcept>
 
 
 GameOfLife::GameOfLife(size_t width, size_t height)
@@ -8,13 +10,33 @@ GameOfLife::GameOfLife(size_t width, size_t height)
     m_nextGrid.resize(m_width * m_height, 0);
 }
 
-// Count neighbors with toroidal wrapping
+GameOfLife::GameOfLife(const std::string& filename)
+{
+    std::ifstream infile(filename);
+    if (!infile.is_open())
+    {
+        throw std::runtime_error("Failed to open file: " + filename);
+    }
+
+    infile >> m_width >> m_height;
+
+    m_currentGrid.resize(m_width * m_height, 0);
+    m_nextGrid.resize(m_width * m_height, 0);
+
+    for (size_t i = 0; i < m_width * m_height; ++i)
+    {
+        int cellValue = 0;
+        infile >> cellValue;
+        m_currentGrid[i] = cellValue;
+    }
+
+    infile.close();
+}
+
 int GameOfLife::countNeighbors(size_t x, size_t y) const
 {
     int count = 0;
 
-    // For clarity, define neighbor coordinate offsets
-    // relative to the current cell
     const int offsets[8][2] = {
         {-1, -1}, {0, -1}, {1, -1},
         {-1,  0},           {1,  0},
@@ -23,9 +45,7 @@ int GameOfLife::countNeighbors(size_t x, size_t y) const
 
     for (auto& off : offsets)
     {
-        // Wrap horizontally
         size_t nx = (x + off[0] + m_width)  % m_width;
-        // Wrap vertically
         size_t ny = (y + off[1] + m_height) % m_height;
 
         count += m_currentGrid[index(nx, ny)];
@@ -36,7 +56,6 @@ int GameOfLife::countNeighbors(size_t x, size_t y) const
 
 void GameOfLife::evolveScalar()
 {
-    // Compute next generation in m_nextGrid
     for (size_t y = 0; y < m_height; ++y)
     {
         for (size_t x = 0; x < m_width; ++x)
@@ -45,15 +64,12 @@ void GameOfLife::evolveScalar()
             int currentState = m_currentGrid[index(x, y)];
             int nextState = 0;
 
-            // Conway's rules:
             if (currentState == 1)
             {
-                // A live cell with 2 or 3 neighbors stays alive
                 nextState = (neighbors == 2 || neighbors == 3) ? 1 : 0;
             }
             else
             {
-                // A dead cell becomes alive if it has exactly 3 neighbors
                 nextState = (neighbors == 3) ? 1 : 0;
             }
 
@@ -61,7 +77,6 @@ void GameOfLife::evolveScalar()
         }
     }
 
-    // Swap current and next for the next iteration
     m_currentGrid.swap(m_nextGrid);
 }
 
@@ -105,5 +120,5 @@ int GameOfLife::getCellState(size_t x, size_t y) const
     {
         return m_currentGrid[index(x, y)];
     }
-    return 0; // Out of range -> just return 0
+    return 0;
 }

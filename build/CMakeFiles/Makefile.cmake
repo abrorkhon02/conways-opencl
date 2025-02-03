@@ -13,13 +13,18 @@ set(CMAKE_MAKEFILE_DEPENDS
   "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeGenericSystem.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeInitializeConfigs.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeLanguageInformation.cmake"
+  "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakePushCheckState.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeRCInformation.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInformation.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/CMakeSystemSpecificInitialize.cmake"
+  "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckSymbolExists.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/Compiler/GNU-C.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/Compiler/GNU-CXX.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/Compiler/GNU.cmake"
+  "C:/Program Files/CMake/share/cmake-3.31/Modules/FindOpenCL.cmake"
+  "C:/Program Files/CMake/share/cmake-3.31/Modules/FindPackageHandleStandardArgs.cmake"
+  "C:/Program Files/CMake/share/cmake-3.31/Modules/FindPackageMessage.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeCLinkerInformation.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeCXXLinkerInformation.cmake"
   "C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CMakeCommonLinkerInformation.cmake"
@@ -60,4 +65,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/game_of_life.dir/DependInfo.cmake"
+  "CMakeFiles/gol_opencl.dir/DependInfo.cmake"
   )

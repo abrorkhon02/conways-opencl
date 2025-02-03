@@ -128,6 +128,43 @@ game_of_life/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/build
 .PHONY : game_of_life/fast
 
+#=============================================================================
+# Target rules for targets named gol_opencl
+
+# Build rule for target.
+gol_opencl: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 gol_opencl
+.PHONY : gol_opencl
+
+# fast build rule for target.
+gol_opencl/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/build
+.PHONY : gol_opencl/fast
+
+gol_opencl.obj: gol_opencl.cpp.obj
+.PHONY : gol_opencl.obj
+
+# target to build an object file
+gol_opencl.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj
+.PHONY : gol_opencl.cpp.obj
+
+gol_opencl.i: gol_opencl.cpp.i
+.PHONY : gol_opencl.i
+
+# target to preprocess a source file
+gol_opencl.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/gol_opencl.cpp.i
+.PHONY : gol_opencl.cpp.i
+
+gol_opencl.s: gol_opencl.cpp.s
+.PHONY : gol_opencl.s
+
+# target to generate assembly for a file
+gol_opencl.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/gol_opencl.cpp.s
+.PHONY : gol_opencl.cpp.s
+
 src/GameOfLife.obj: src/GameOfLife.cpp.obj
 .PHONY : src/GameOfLife.obj
 
@@ -185,6 +222,10 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... game_of_life
+	@echo ... gol_opencl
+	@echo ... gol_opencl.obj
+	@echo ... gol_opencl.i
+	@echo ... gol_opencl.s
 	@echo ... src/GameOfLife.obj
 	@echo ... src/GameOfLife.i
 	@echo ... src/GameOfLife.s

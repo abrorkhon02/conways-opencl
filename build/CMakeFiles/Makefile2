@@ -63,10 +63,12 @@ CMAKE_BINARY_DIR = C:\Users\Asimov\Desktop\develop\conways-opencl\build
 
 # The main recursive "all" target.
 all: CMakeFiles/game_of_life.dir/all
+all: CMakeFiles/gol_opencl.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/game_of_life.dir/codegen
+codegen: CMakeFiles/gol_opencl.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -75,6 +77,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/game_of_life.dir/clean
+clean: CMakeFiles/gol_opencl.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -107,6 +110,37 @@ CMakeFiles/game_of_life.dir/codegen:
 CMakeFiles/game_of_life.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/clean
 .PHONY : CMakeFiles/game_of_life.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/gol_opencl.dir
+
+# All Build rule for target.
+CMakeFiles/gol_opencl.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles --progress-num=4,5 "Built target gol_opencl"
+.PHONY : CMakeFiles/gol_opencl.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/gol_opencl.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/gol_opencl.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles 0
+.PHONY : CMakeFiles/gol_opencl.dir/rule
+
+# Convenience name for target.
+gol_opencl: CMakeFiles/gol_opencl.dir/rule
+.PHONY : gol_opencl
+
+# codegen rule for target.
+CMakeFiles/gol_opencl.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/codegen
+.PHONY : CMakeFiles/gol_opencl.dir/codegen
+
+# clean rule for target.
+CMakeFiles/gol_opencl.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/clean
+.PHONY : CMakeFiles/gol_opencl.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

@@ -641,3 +641,48 @@ events:
       Running the CXX compiler's linker: "C:/msys64/ucrt64/x86_64-w64-mingw32/bin/ld.exe" "-v"
       GNU ld (GNU Binutils) 2.41
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckSymbolExists.cmake:163 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/CheckSymbolExists.cmake:68 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindOpenCL.cmake:59 (CHECK_SYMBOL_EXISTS)"
+      - "C:/Program Files/CMake/share/cmake-3.31/Modules/FindOpenCL.cmake:100 (_FIND_OPENCL_VERSION)"
+      - "CMakeLists.txt:13 (find_package)"
+    checks:
+      - "Looking for CL_VERSION_3_0"
+    directories:
+      source: "C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/CMakeScratch/TryCompile-dto2o7"
+      binary: "C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/CMakeScratch/TryCompile-dto2o7"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "OPENCL_VERSION_3_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/CMakeScratch/TryCompile-dto2o7'
+        
+        Run Build Command(s): "C:/Program Files/CMake/bin/cmake.exe" -E env VERBOSE=1 C:/msys64/ucrt64/bin/mingw32-make.exe -f Makefile cmTC_284b7/fast
+        C:/msys64/ucrt64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_284b7.dir\\build.make CMakeFiles/cmTC_284b7.dir/build
+        mingw32-make[1]: Entering directory 'C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/CMakeScratch/TryCompile-dto2o7'
+        Building C object CMakeFiles/cmTC_284b7.dir/CheckSymbolExists.c.obj
+        C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/cmTC_284b7.dir/includes_C.rsp  -o CMakeFiles\\cmTC_284b7.dir\\CheckSymbolExists.c.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dto2o7\\CheckSymbolExists.c
+        In file included from C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include/CL/cl.h:20,
+                         from C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\build\\CMakeFiles\\CMakeScratch\\TryCompile-dto2o7\\CheckSymbolExists.c:2:
+        C:/PROGRA~1/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include/CL/cl_version.h:22:9: note: '#pragma message: cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)'
+           22 | #pragma message("cl_version.h: CL_TARGET_OPENCL_VERSION is not defined. Defaulting to 300 (OpenCL 3.0)")
+              |         ^~~~~~~
+        Linking C executable cmTC_284b7.exe
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E cmake_link_script CMakeFiles\\cmTC_284b7.dir\\link.txt --verbose=1
+        "C:\\Program Files\\CMake\\bin\\cmake.exe" -E rm -f CMakeFiles\\cmTC_284b7.dir/objects.a
+        C:\\msys64\\ucrt64\\bin\\ar.exe qc CMakeFiles\\cmTC_284b7.dir/objects.a @CMakeFiles\\cmTC_284b7.dir\\objects1.rsp
+        C:\\msys64\\ucrt64\\bin\\gcc.exe -Wl,--whole-archive CMakeFiles\\cmTC_284b7.dir/objects.a -Wl,--no-whole-archive -o cmTC_284b7.exe -Wl,--out-implib,libcmTC_284b7.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\\cmTC_284b7.dir\\linkLibs.rsp
+        mingw32-make[1]: Leaving directory 'C:/Users/Asimov/Desktop/develop/conways-opencl/build/CMakeFiles/CMakeScratch/TryCompile-dto2o7'
+        
+      exitCode: 0
+...
