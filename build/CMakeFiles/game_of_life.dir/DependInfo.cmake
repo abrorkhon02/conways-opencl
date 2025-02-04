@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "C:/Users/Asimov/Desktop/develop/conways-opencl/src/CLI.cpp" "CMakeFiles/game_of_life.dir/src/CLI.cpp.obj" "gcc" "CMakeFiles/game_of_life.dir/src/CLI.cpp.obj.d"
   "C:/Users/Asimov/Desktop/develop/conways-opencl/src/GameOfLife.cpp" "CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.obj" "gcc" "CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.obj.d"
   "C:/Users/Asimov/Desktop/develop/conways-opencl/src/main.cpp" "CMakeFiles/game_of_life.dir/src/main.cpp.obj" "gcc" "CMakeFiles/game_of_life.dir/src/main.cpp.obj.d"
   )

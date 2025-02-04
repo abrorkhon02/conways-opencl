@@ -1,34 +1,13 @@
-CMakeFiles/game_of_life.dir/src/main.cpp.obj: \
- C:\Users\Asimov\Desktop\develop\conways-opencl\src\main.cpp \
- C:/msys64/ucrt64/include/c++/13.2.0/cstdlib \
+CMakeFiles/game_of_life.dir/src/CLI.cpp.obj: \
+ C:\Users\Asimov\Desktop\develop\conways-opencl\src\CLI.cpp \
+ C:/Users/Asimov/Desktop/develop/conways-opencl/include/CLI.h \
+ C:/Users/Asimov/Desktop/develop/conways-opencl/include/GameOfLife.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/vector \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/requires_hosted.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++config.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/os_defines.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/cpu_defines.h \
  C:/msys64/ucrt64/include/c++/13.2.0/pstl/pstl_config.h \
- C:/msys64/ucrt64/include/stdlib.h C:/msys64/ucrt64/include/corecrt.h \
- C:/msys64/ucrt64/include/_mingw.h C:/msys64/ucrt64/include/_mingw_mac.h \
- C:/msys64/ucrt64/include/_mingw_secapi.h \
- C:/msys64/ucrt64/include/vadefs.h \
- C:/msys64/ucrt64/include/sdks/_mingw_ddk.h \
- C:/msys64/ucrt64/include/corecrt_wstdlib.h \
- C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/limits.h \
- C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/syslimits.h \
- C:/msys64/ucrt64/include/limits.h C:/msys64/ucrt64/include/crtdefs.h \
- C:/msys64/ucrt64/include/sec_api/stdlib_s.h \
- C:/msys64/ucrt64/include/c++/13.2.0/stdlib.h \
- C:/msys64/ucrt64/include/malloc.h \
- C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/mm_malloc.h \
- C:/msys64/ucrt64/include/errno.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/std_abs.h \
- C:/msys64/ucrt64/include/c++/13.2.0/clocale \
- C:/msys64/ucrt64/include/locale.h C:/msys64/ucrt64/include/stdio.h \
- C:/msys64/ucrt64/include/corecrt_stdio_config.h \
- C:/msys64/ucrt64/include/_mingw_off_t.h \
- C:/msys64/ucrt64/include/swprintf.inl \
- C:/msys64/ucrt64/include/sec_api/stdio_s.h \
- C:/Users/Asimov/Desktop/develop/conways-opencl/include/GameOfLife.h \
- C:/msys64/ucrt64/include/c++/13.2.0/vector \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/requires_hosted.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_algobase.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/functexcept.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/exception_defines.h \
@@ -72,10 +51,27 @@ CMakeFiles/game_of_life.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/memory_resource.h \
  C:/msys64/ucrt64/include/c++/13.2.0/cstddef \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stddef.h \
- C:/msys64/ucrt64/include/stddef.h \
+ C:/msys64/ucrt64/include/stddef.h C:/msys64/ucrt64/include/crtdefs.h \
+ C:/msys64/ucrt64/include/corecrt.h C:/msys64/ucrt64/include/_mingw.h \
+ C:/msys64/ucrt64/include/_mingw_mac.h \
+ C:/msys64/ucrt64/include/_mingw_secapi.h \
+ C:/msys64/ucrt64/include/vadefs.h \
+ C:/msys64/ucrt64/include/sdks/_mingw_ddk.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/uses_allocator.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/uses_allocator_args.h \
  C:/msys64/ucrt64/include/c++/13.2.0/tuple \
+ C:/msys64/ucrt64/include/c++/13.2.0/cstdlib \
+ C:/msys64/ucrt64/include/stdlib.h \
+ C:/msys64/ucrt64/include/corecrt_wstdlib.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/limits.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/syslimits.h \
+ C:/msys64/ucrt64/include/limits.h \
+ C:/msys64/ucrt64/include/sec_api/stdlib_s.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/stdlib.h \
+ C:/msys64/ucrt64/include/malloc.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/mm_malloc.h \
+ C:/msys64/ucrt64/include/errno.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/std_abs.h \
  C:/msys64/ucrt64/include/c++/13.2.0/iostream \
  C:/msys64/ucrt64/include/c++/13.2.0/ostream \
  C:/msys64/ucrt64/include/c++/13.2.0/ios \
@@ -84,7 +80,10 @@ CMakeFiles/game_of_life.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/postypes.h \
  C:/msys64/ucrt64/include/c++/13.2.0/cwchar \
  C:/msys64/ucrt64/include/wchar.h \
+ C:/msys64/ucrt64/include/corecrt_stdio_config.h \
+ C:/msys64/ucrt64/include/_mingw_off_t.h \
  C:/msys64/ucrt64/include/_mingw_stat64.h \
+ C:/msys64/ucrt64/include/swprintf.inl \
  C:/msys64/ucrt64/include/sec_api/wchar_s.h \
  C:/msys64/ucrt64/include/c++/13.2.0/exception \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/exception_ptr.h \
@@ -94,6 +93,9 @@ CMakeFiles/game_of_life.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/char_traits.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/localefwd.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++locale.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/clocale \
+ C:/msys64/ucrt64/include/locale.h C:/msys64/ucrt64/include/stdio.h \
+ C:/msys64/ucrt64/include/sec_api/stdio_s.h \
  C:/msys64/ucrt64/include/c++/13.2.0/cctype \
  C:/msys64/ucrt64/include/ctype.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/ios_base.h \
@@ -142,5 +144,18 @@ CMakeFiles/game_of_life.dir/src/main.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/ostream.tcc \
  C:/msys64/ucrt64/include/c++/13.2.0/istream \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/istream.tcc \
- C:/Users/Asimov/Desktop/develop/conways-opencl/include/CLI.h \
- C:/Users/Asimov/Desktop/develop/conways-opencl/include/GameOfLife.h
+ C:/msys64/ucrt64/include/c++/13.2.0/sstream \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/sstream.tcc \
+ C:/msys64/ucrt64/include/c++/13.2.0/chrono \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/chrono.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/ratio \
+ C:/msys64/ucrt64/include/c++/13.2.0/cstdint \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h \
+ C:/msys64/ucrt64/include/stdint.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/limits \
+ C:/msys64/ucrt64/include/c++/13.2.0/ctime \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/parse_numbers.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/thread \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/std_thread.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/unique_ptr.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/this_thread_sleep.h

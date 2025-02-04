@@ -94,17 +94,22 @@ int main()
 
     // 2b) Get a device (GPU or CPU)
     cl_uint numDevices = 0;
-    clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
-    if (numDevices == 0) {
+    cl_int err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
+    std::vector<cl_device_id> devices;
+
+    if(numDevices == 0) {
         // fallback to CPU if GPU not found
-        clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, 0, nullptr, &numDevices);
-        if (numDevices == 0) {
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, 0, nullptr, &numDevices);
+        if(numDevices == 0) {
             std::cerr << "No GPU/CPU devices found.\n";
             return 1;
         }
+        devices.resize(numDevices);
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, numDevices, devices.data(), nullptr);
+    } else {
+        devices.resize(numDevices);
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, numDevices, devices.data(), nullptr);
     }
-    std::vector<cl_device_id> devices(numDevices);
-    clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, numDevices, devices.data(), nullptr);
     cl_device_id device = devices[0];
 
     // 2c) Create context and command queue

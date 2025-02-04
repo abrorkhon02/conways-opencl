@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/game_of_life.dir/src/CLI.cpp.obj"
+  "CMakeFiles/game_of_life.dir/src/CLI.cpp.obj.d"
   "CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.obj"
   "CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.obj.d"
   "CMakeFiles/game_of_life.dir/src/main.cpp.obj"

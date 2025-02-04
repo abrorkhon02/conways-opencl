@@ -24,7 +24,7 @@ private:
     void createWorld();  // Neue Welt mit Breite und Höhe erstellen
     void loadWorld();    // Welt aus einer Datei laden
     void saveWorld();    // Welt in eine Datei speichern
-    void runEvolution(); // Simulation für n Generationen durchführen
+    void runEvolution(const std::string& mode, int generations); // Simulation für n Generationen durchführen
     void setCellState(); // Zellzustand setzen (2D oder 1D)
     void getCellState(); // Zellzustand abfragen (2D oder 1D)
     void addGlider();    // Glider-Muster einfügen

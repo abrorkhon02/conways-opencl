@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 
 class GameOfLife
 {
@@ -22,6 +23,7 @@ private:
 
 public:
     GameOfLife(size_t width, size_t height);
+    GameOfLife(const std::string& filename);
 
     void evolveScalar();
 
@@ -34,7 +36,10 @@ public:
 
     void setCellState(size_t x, size_t y, int state);
     int  getCellState(size_t x, size_t y) const;
-    GameOfLife(const std::string& filename);
+
+    void setCellState1D(size_t index, int state);
+    int getCellState1D(size_t index) const;
+    void saveToFile(const std::string& filename);
 };
 
 #endif

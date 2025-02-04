@@ -122,3 +122,28 @@ int GameOfLife::getCellState(size_t x, size_t y) const
     }
     return 0;
 }
+
+void GameOfLife::setCellState1D(size_t index, int state) {
+    size_t x = index % m_width;
+    size_t y = index / m_width;
+    setCellState(x, y, state);
+}
+
+int GameOfLife::getCellState1D(size_t index) const {
+    size_t x = index % m_width;
+    size_t y = index / m_width;
+    return getCellState(x, y);
+}
+
+void GameOfLife::saveToFile(const std::string& filename) {
+    std::ofstream ofs(filename);
+    if (!ofs) {
+        throw std::runtime_error("Could not open file for writing");
+    }
+    for (size_t y = 0; y < m_height; ++y) {
+        for (size_t x = 0; x < m_width; ++x) {
+            ofs << getCellState(x, y) << " ";
+        }
+        ofs << "\n";
+    }
+}

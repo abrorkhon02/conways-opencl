@@ -47,33 +47,7 @@ void CLI::processCommand(const std::string& command) {
         std::string mode;
         int generations = 0;
         iss >> mode >> generations;
-        if (mode == "scalar") {
-            // Für scalar verwenden wir die vorhandene Methode
-            if (!world) {
-                std::cout << "Erstelle oder lade zuerst eine Welt." << std::endl;
-                return;
-            }
-            auto start = std::chrono::high_resolution_clock::now();
-            for (int i = 0; i < generations; ++i) {
-                world->evolveScalar();
-                if (printAfterGeneration) {
-                    world->print();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
-                }
-                // Hier könnte man eine Stabilitätsprüfung einfügen.
-            }
-            auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-            std::cout << "Scalar-Evolution dauerte " << duration.count() << " ms." << std::endl;
-        }
-        else if (mode == "opencl") {
-            // Hier wäre der Aufruf der OpenCL-Version der Evolution denkbar,
-            // z.B. world->evolveOpenCL() oder ein separater Funktionsaufruf.
-            std::cout << "OpenCL-Modus noch nicht implementiert." << std::endl;
-        }
-        else {
-            std::cout << "Unbekannter Modus. Bitte 'scalar' oder 'opencl' angeben." << std::endl;
-        }
+        runEvolution(mode, generations);
     }
     else if (token == "set") {
         setCellState();
@@ -146,7 +120,6 @@ void CLI::createWorld() {
     std::cin >> width;
     std::cout << "Höhe: ";
     std::cin >> height;
-    // Eingabepuffer leeren
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     
     delete world;
@@ -168,11 +141,25 @@ void CLI::loadWorld() {
     }
 }
 
-void CLI::runEvolution() {
-    // Diese Funktion wird im "run"-Befehl bereits abgehandelt, da hier zwischen
-    // scalar und opencl unterschieden wird.
-    // Falls du eine gemeinsame Logik haben möchtest, könntest du hier eine Wrapper-Funktion
-    // implementieren.
+void CLI::runEvolution(const std::string& mode, int generations) {
+    if (mode == "opencl") {
+        std::cout << "Launching OpenCL evolution for " << generations << " generation(s)...\n";
+        std::string command = ".\\gol_opencl.exe " + std::to_string(generations);
+        int ret = system(command.c_str());
+        if(ret != 0) {
+            std::cout << "OpenCL execution failed with code " << ret << "\n";
+        }
+    } else if (mode == "scalar") {
+        if(world) {
+            for (int i = 0; i < generations; ++i)
+                world->evolveScalar();
+            world->print();
+        } else {
+            std::cout << "No world loaded.\n";
+        }
+    } else {
+        std::cout << "Unrecognized mode. Use 'scalar' or 'opencl'.\n";
+    }
 }
 
 void CLI::setCellState() {

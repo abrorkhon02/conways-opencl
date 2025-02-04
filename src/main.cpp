@@ -1,20 +1,14 @@
+#include <cstdlib>
+#include <clocale>
 #include "../include/GameOfLife.h"
+#include "CLI.h"
 #include <iostream>
 
-int main()
-{
-    GameOfLife gol(10, 10);
-    gol.randomize(0.3);
-
-    std::cout << "Initial State:" << std::endl;
-    gol.print();
-
-    for (int i = 1; i <= 5; ++i)
-    {
-        gol.evolveScalar();
-        std::cout << "Generation " << i << ":" << std::endl;
-        gol.print();
-    }
-
+int main() {
+    system("chcp 65001");
+    std::setlocale(LC_ALL, "");
+    
+    CLI cli;
+    cli.run();
     return 0;
 }

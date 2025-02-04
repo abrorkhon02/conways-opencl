@@ -165,6 +165,30 @@ gol_opencl.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/gol_opencl.cpp.s
 .PHONY : gol_opencl.cpp.s
 
+src/CLI.obj: src/CLI.cpp.obj
+.PHONY : src/CLI.obj
+
+# target to build an object file
+src/CLI.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/src/CLI.cpp.obj
+.PHONY : src/CLI.cpp.obj
+
+src/CLI.i: src/CLI.cpp.i
+.PHONY : src/CLI.i
+
+# target to preprocess a source file
+src/CLI.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/src/CLI.cpp.i
+.PHONY : src/CLI.cpp.i
+
+src/CLI.s: src/CLI.cpp.s
+.PHONY : src/CLI.s
+
+# target to generate assembly for a file
+src/CLI.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/src/CLI.cpp.s
+.PHONY : src/CLI.cpp.s
+
 src/GameOfLife.obj: src/GameOfLife.cpp.obj
 .PHONY : src/GameOfLife.obj
 
@@ -226,6 +250,9 @@ help:
 	@echo ... gol_opencl.obj
 	@echo ... gol_opencl.i
 	@echo ... gol_opencl.s
+	@echo ... src/CLI.obj
+	@echo ... src/CLI.i
+	@echo ... src/CLI.s
 	@echo ... src/GameOfLife.obj
 	@echo ... src/GameOfLife.i
 	@echo ... src/GameOfLife.s
