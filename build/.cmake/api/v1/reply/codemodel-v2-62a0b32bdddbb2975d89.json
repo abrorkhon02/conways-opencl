@@ -6,7 +6,7 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.15"
@@ -16,11 +16,13 @@
 					"targetIndexes" : 
 					[
 						0,
-						1
+						1,
+						2,
+						3
 					]
 				}
 			],
-			"name" : "Debug",
+			"name" : "Release",
 			"projects" : 
 			[
 				{
@@ -32,7 +34,9 @@
 					"targetIndexes" : 
 					[
 						0,
-						1
+						1,
+						2,
+						3
 					]
 				}
 			],
@@ -41,15 +45,29 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "game_of_life::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-game_of_life-Debug-d71cdb48edc2129d1ee1.json",
+					"jsonFile" : "target-game_of_life-Release-7b474854cc9d74b1c63b.json",
 					"name" : "game_of_life",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "gol_opencl::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-gol_opencl-Debug-86256bdcf404ad121d57.json",
+					"jsonFile" : "target-gol_opencl-Release-685c027261853b528e2f.json",
 					"name" : "gol_opencl",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "performance_measure::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-performance_measure-Release-392524c75c33925e2f8e.json",
+					"name" : "performance_measure",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_save::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_save-Release-a9394d75da357db001a9.json",
+					"name" : "test_save",
 					"projectIndex" : 0
 				}
 			]

@@ -1,3 +1,3 @@
 "C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\gol_opencl.dir/objects.a
 C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\gol_opencl.dir/objects.a @CMakeFiles\gol_opencl.dir\objects1.rsp
-C:\msys64\ucrt64\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\gol_opencl.dir/objects.a -Wl,--no-whole-archive -o gol_opencl.exe -Wl,--out-implib,libgol_opencl.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\gol_opencl.dir\linkLibs.rsp
+C:\msys64\ucrt64\bin\g++.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\gol_opencl.dir/objects.a -Wl,--no-whole-archive -o gol_opencl.exe -Wl,--out-implib,libgol_opencl.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\gol_opencl.dir\linkLibs.rsp

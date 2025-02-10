@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj"
-  "CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj.d"
+  "CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj"
+  "CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj.d"
   "gol_opencl.exe"
   "gol_opencl.exe.manifest"
   "gol_opencl.pdb"

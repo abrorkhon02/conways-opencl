@@ -71,29 +71,29 @@ include CMakeFiles/gol_opencl.dir/flags.make
 CMakeFiles/gol_opencl.dir/codegen:
 .PHONY : CMakeFiles/gol_opencl.dir/codegen
 
-CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj: CMakeFiles/gol_opencl.dir/flags.make
-CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj: CMakeFiles/gol_opencl.dir/includes_CXX.rsp
-CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj: C:/Users/Asimov/Desktop/develop/conways-opencl/gol_opencl.cpp
-CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj: CMakeFiles/gol_opencl.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj"
-	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj -MF CMakeFiles\gol_opencl.dir\gol_opencl.cpp.obj.d -o CMakeFiles\gol_opencl.dir\gol_opencl.cpp.obj -c C:\Users\Asimov\Desktop\develop\conways-opencl\gol_opencl.cpp
+CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj: CMakeFiles/gol_opencl.dir/flags.make
+CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj: CMakeFiles/gol_opencl.dir/includes_CXX.rsp
+CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj: C:/Users/Asimov/Desktop/develop/conways-opencl/src/gol_opencl.cpp
+CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj: CMakeFiles/gol_opencl.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj"
+	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj -MF CMakeFiles\gol_opencl.dir\src\gol_opencl.cpp.obj.d -o CMakeFiles\gol_opencl.dir\src\gol_opencl.cpp.obj -c C:\Users\Asimov\Desktop\develop\conways-opencl\src\gol_opencl.cpp
 
-CMakeFiles/gol_opencl.dir/gol_opencl.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/gol_opencl.dir/gol_opencl.cpp.i"
-	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Asimov\Desktop\develop\conways-opencl\gol_opencl.cpp > CMakeFiles\gol_opencl.dir\gol_opencl.cpp.i
+CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.i"
+	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Asimov\Desktop\develop\conways-opencl\src\gol_opencl.cpp > CMakeFiles\gol_opencl.dir\src\gol_opencl.cpp.i
 
-CMakeFiles/gol_opencl.dir/gol_opencl.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/gol_opencl.dir/gol_opencl.cpp.s"
-	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Asimov\Desktop\develop\conways-opencl\gol_opencl.cpp -o CMakeFiles\gol_opencl.dir\gol_opencl.cpp.s
+CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.s"
+	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Asimov\Desktop\develop\conways-opencl\src\gol_opencl.cpp -o CMakeFiles\gol_opencl.dir\src\gol_opencl.cpp.s
 
 # Object files for target gol_opencl
 gol_opencl_OBJECTS = \
-"CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj"
+"CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj"
 
 # External object files for target gol_opencl
 gol_opencl_EXTERNAL_OBJECTS =
 
-gol_opencl.exe: CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj
+gol_opencl.exe: CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj
 gol_opencl.exe: CMakeFiles/gol_opencl.dir/build.make
 gol_opencl.exe: C:/Program\ Files/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v12.6/lib/x64/OpenCL.lib
 gol_opencl.exe: CMakeFiles/gol_opencl.dir/linkLibs.rsp

@@ -66,4 +66,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/game_of_life.dir/DependInfo.cmake"
   "CMakeFiles/gol_opencl.dir/DependInfo.cmake"
+  "CMakeFiles/performance_measure.dir/DependInfo.cmake"
+  "CMakeFiles/test_save.dir/DependInfo.cmake"
   )

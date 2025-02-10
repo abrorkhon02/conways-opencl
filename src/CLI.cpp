@@ -3,8 +3,9 @@
 #include <sstream>
 #include <chrono>
 #include <thread>
-#include <limits> // Für numeric_limits
-#include <cstddef> 
+#include <limits>
+#include <cstddef>
+#include <vector>
 
 CLI::CLI()
     : world(nullptr), printAfterGeneration(false), delayMs(0)
@@ -43,7 +44,6 @@ void CLI::processCommand(const std::string& command) {
         saveWorld();
     }
     else if (token == "run") {
-        // Optionale Erweiterung: Erlaubt Auswahl zwischen scalar und opencl z. B. "run scalar 100"
         std::string mode;
         int generations = 0;
         iss >> mode >> generations;
@@ -75,12 +75,12 @@ void CLI::processCommand(const std::string& command) {
         else if (mode == "off")
             printAfterGeneration = false;
         else
-            std::cout << "Bitte 'print on' oder 'print off' verwenden." << std::endl;
-        std::cout << "Ausgabe nach Generationen: " << (printAfterGeneration ? "aktiviert" : "deaktiviert") << std::endl;
+            std::cout << "Please use 'print on' or 'print off'.\n";
+        std::cout << "Printing after generation: " << (printAfterGeneration ? "enabled" : "disabled") << std::endl;
     }
     else if (token == "delay") {
         iss >> delayMs;
-        std::cout << "Verzögerung auf " << delayMs << " ms gesetzt." << std::endl;
+        std::cout << "Delay set to " << delayMs << " ms.\n";
     }
     else if (token == "help") {
         printHelp();
@@ -92,68 +92,91 @@ void CLI::processCommand(const std::string& command) {
         getCellState1D();
     }
     else {
-        std::cout << "Unbekannter Befehl. Bitte 'help' für die Befehlsliste eingeben." << std::endl;
+        std::cout << "Unknown command. Please enter 'help' for a list of commands.\n";
     }  
 }
 
 void CLI::printHelp() const {
-    std::cout << "\nVerfügbare Befehle:" << std::endl;
-    std::cout << "  create          : Erzeuge eine neue Welt (Fragt nach Breite und Höhe)" << std::endl;
-    std::cout << "  load            : Lade Welt aus Datei (Fragt nach Dateinamen)" << std::endl;
-    std::cout << "  save            : Speichere aktuelle Welt in Datei (Fragt nach Dateinamen)" << std::endl;
-    std::cout << "  run <mode> <n>  : Lasse n Generationen laufen. Mode: 'scalar' oder 'opencl'" << std::endl;
-    std::cout << "  set             : Setze einen Zellzustand (fragt x, y und Zustand ab)" << std::endl;
-    std::cout << "  get             : Frage einen Zellzustand ab (fragt x und y ab)" << std::endl;
-    std::cout << "  glider          : Füge ein Glider-Muster ein" << std::endl;
-    std::cout << "  toad            : Füge ein Toad-Muster ein" << std::endl;
-    std::cout << "  beacon          : Füge ein Beacon-Muster ein" << std::endl;
-    std::cout << "  methuselah      : Füge ein Methuselah-Muster ein" << std::endl;
-    std::cout << "  print on/off    : Schalte die Ausgabe nach jeder Generation an/aus" << std::endl;
-    std::cout << "  delay <ms>      : Setze die Verzögerung in Millisekunden" << std::endl;
-    std::cout << "  help            : Zeige diese Hilfe an" << std::endl;
-    std::cout << "  exit / quit     : Beende das Programm\n" << std::endl;
+    std::cout << "\nAvailable commands:" << std::endl;
+    std::cout << "  create          : Create a new world (asks for width and height)" << std::endl;
+    std::cout << "  load            : Load world from file (asks for filename)" << std::endl;
+    std::cout << "  save            : Save current world to file (asks for filename)" << std::endl;
+    std::cout << "  run <mode> <n>  : Run evolution for n generations. Mode: 'scalar' or 'opencl'" << std::endl;
+    std::cout << "  set             : Set cell state (asks for x, y and state)" << std::endl;
+    std::cout << "  get             : Get cell state (asks for x and y)" << std::endl;
+    std::cout << "  glider          : Add a glider pattern" << std::endl;
+    std::cout << "  toad            : Add a toad pattern" << std::endl;
+    std::cout << "  beacon          : Add a beacon pattern" << std::endl;
+    std::cout << "  methuselah      : Add a methuselah pattern" << std::endl;
+    std::cout << "  print on/off    : Enable/disable printing after each generation" << std::endl;
+    std::cout << "  delay <ms>      : Set delay (ms) for printing" << std::endl;
+    std::cout << "  help            : Show this help" << std::endl;
+    std::cout << "  exit / quit     : Exit the program\n" << std::endl;
 }
 
 void CLI::createWorld() {
     size_t width, height;
-    std::cout << "Breite: ";
+    std::cout << "Width: ";
     std::cin >> width;
-    std::cout << "Höhe: ";
+    std::cout << "Height: ";
     std::cin >> height;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     
     delete world;
     world = new GameOfLife(width, height);
-    std::cout << "Neue Welt erstellt (" << width << " x " << height << ")." << std::endl;
+    std::cout << "New world created (" << width << " x " << height << ")." << std::endl;
 }
 
 void CLI::loadWorld() {
     std::string filename;
-    std::cout << "Dateiname zum Laden: ";
+    std::cout << "Filename to load: ";
     std::cin >> filename;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     try {
         delete world;
         world = new GameOfLife(filename);
-        std::cout << "Welt aus '" << filename << "' geladen." << std::endl;
+        std::cout << "World loaded from '" << filename << "'." << std::endl;
     } catch (const std::exception& e) {
-        std::cout << "Fehler beim Laden: " << e.what() << std::endl;
+        std::cout << "Error loading world: " << e.what() << std::endl;
     }
 }
 
 void CLI::runEvolution(const std::string& mode, int generations) {
     if (mode == "opencl") {
+        if (!world) {
+            std::cout << "No world loaded.\n";
+            return;
+        }
         std::cout << "Launching OpenCL evolution for " << generations << " generation(s)...\n";
-        std::string command = ".\\gol_opencl.exe " + std::to_string(generations);
-        int ret = system(command.c_str());
+        // Construct command with width, height, and generation count
+        std::stringstream cmd;
+#ifdef _WIN32
+        cmd << "gol_opencl.exe " << world->getWidth() << " " << world->getHeight() << " " << generations;
+#else
+        cmd << "./gol_opencl " << world->getWidth() << " " << world->getHeight() << " " << generations;
+#endif
+        int ret = system(cmd.str().c_str());
         if(ret != 0) {
             std::cout << "OpenCL execution failed with code " << ret << "\n";
         }
     } else if (mode == "scalar") {
         if(world) {
-            for (int i = 0; i < generations; ++i)
+            auto start = std::chrono::steady_clock::now();
+            for (int i = 0; i < generations; ++i) {
+                std::vector<int> prevGrid = world->getCurrentGrid();
                 world->evolveScalar();
-            world->print();
+                if (printAfterGeneration) {
+                    world->print();
+                    std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+                }
+                if (world->getCurrentGrid() == prevGrid) {
+                    std::cout << "Stable state reached at generation " << (i+1) << ".\n";
+                    break;
+                }
+            }
+            auto end = std::chrono::steady_clock::now();
+            auto duration = std::chrono::duration<double>(end - start);
+            std::cout << "Scalar evolution completed in " << duration.count() << " seconds.\n";
         } else {
             std::cout << "No world loaded.\n";
         }
@@ -164,7 +187,7 @@ void CLI::runEvolution(const std::string& mode, int generations) {
 
 void CLI::setCellState() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
     size_t x, y;
@@ -173,16 +196,16 @@ void CLI::setCellState() {
     std::cin >> x;
     std::cout << "y: ";
     std::cin >> y;
-    std::cout << "Zustand (0 oder 1): ";
+    std::cout << "State (0 or 1): ";
     std::cin >> state;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     world->setCellState(x, y, state);
-    std::cout << "Zellzustand an (" << x << ", " << y << ") gesetzt." << std::endl;
+    std::cout << "Cell state at (" << x << ", " << y << ") set.\n";
 }
 
 void CLI::getCellState() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
     size_t x, y;
@@ -192,143 +215,122 @@ void CLI::getCellState() {
     std::cin >> y;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     int state = world->getCellState(x, y);
-    std::cout << "Zellzustand an (" << x << ", " << y << ") ist: " << state << std::endl;
+    std::cout << "Cell state at (" << x << ", " << y << ") is: " << state << "\n";
 }
 
-void CLI::setCellState1D()
-{
+void CLI::setCellState1D() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
     size_t p;
     int state;
-    std::cout << "Eindimensionaler Index p: ";
+    std::cout << "1D index p: ";
     std::cin >> p;
-    std::cout << "Zustand (0 oder 1): ";
+    std::cout << "State (0 or 1): ";
     std::cin >> state;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
     world->setCellState1D(p, state);
-    std::cout << "Zellzustand an Index " << p << " gesetzt auf " << state << std::endl;
+    std::cout << "Cell state at index " << p << " set to " << state << "\n";
 }
 
-void CLI::getCellState1D()
-{
+void CLI::getCellState1D() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
     size_t p;
-    std::cout << "Eindimensionaler Index p: ";
+    std::cout << "1D index p: ";
     std::cin >> p;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
     int state = world->getCellState1D(p);
-    std::cout << "Zellzustand an Index " << p << " ist: " << state << std::endl;
+    std::cout << "Cell state at index " << p << " is: " << state << "\n";
 }
 
-void CLI::saveWorld()
-{
+void CLI::saveWorld() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
-
     std::string filename;
-    std::cout << "Dateiname zum Speichern: ";
+    std::cout << "Filename to save: ";
     std::cin >> filename;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
     try {
         world->saveToFile(filename);
-        std::cout << "Welt erfolgreich in '" << filename << "' gespeichert." << std::endl;
+        std::cout << "World saved to '" << filename << "'.\n";
     } catch (const std::exception& e) {
-        std::cout << "Fehler beim Speichern: " << e.what() << std::endl;
+        std::cout << "Error saving world: " << e.what() << "\n";
     }
 }
 
 void CLI::addGlider() {
     if (!world) {
-        std::cout << "Keine Welt geladen/erstellt.\n";
+        std::cout << "No world loaded.\n";
         return;
     }
     size_t x, y;
-    std::cout << "Eckpunkt (x, y) fuer den Glider angeben:\n";
+    std::cout << "Enter (x, y) for glider placement:\n";
     std::cin >> x >> y;
     world->setCellState(x+1, y, 1);
     world->setCellState(x+2, y+1, 1);
     world->setCellState(x,   y+2, 1);
     world->setCellState(x+1, y+2, 1);
     world->setCellState(x+2, y+2, 1);
-
-    std::cout << "Glider hinzugefuegt.\n";
+    std::cout << "Glider added.\n";
 }
 
 void CLI::addToad() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
     size_t x, y;
-    std::cout << "Position (x, y) fuer Toad eingeben: ";
+    std::cout << "Enter (x, y) for toad placement: ";
     std::cin >> x >> y;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    // Annahme, dass (x+2) und (y+1) noch im Grid sind
     world->setCellState(x+1, y,   1);
     world->setCellState(x+2, y,   1);
     world->setCellState(x+3, y,   1);
-
     world->setCellState(x,   y+1, 1);
     world->setCellState(x+1, y+1, 1);
     world->setCellState(x+2, y+1, 1);
-
-    std::cout << "Toad hinzugefuegt.\n";
+    std::cout << "Toad added.\n";
 }
-
 
 void CLI::addBeacon() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
     size_t x, y;
-    std::cout << "Position (x, y) fuer Beacon eingeben: ";
+    std::cout << "Enter (x, y) for beacon placement: ";
     std::cin >> x >> y;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    // Achtung auf Grid-Grenzen
     world->setCellState(x,   y,   1);
     world->setCellState(x+1, y,   1);
     world->setCellState(x,   y+1, 1);
     world->setCellState(x+1, y+1, 1);
-
     world->setCellState(x+2, y+2, 1);
     world->setCellState(x+3, y+2, 1);
     world->setCellState(x+2, y+3, 1);
     world->setCellState(x+3, y+3, 1);
-
-    std::cout << "Beacon hinzugefuegt.\n";
+    std::cout << "Beacon added.\n";
 }
-
 
 void CLI::addMethuselah() {
     if (!world) {
-        std::cout << "Keine Welt vorhanden! Erstelle oder lade zuerst eine Welt." << std::endl;
+        std::cout << "No world available! Create or load a world first.\n";
         return;
     }
     size_t x, y;
-    std::cout << "Position (x, y) fuer Methuselah eingeben: ";
+    std::cout << "Enter (x, y) for Methuselah placement: ";
     std::cin >> x >> y;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    // R-Pentomino (eine mögliche Ausrichtung):
     world->setCellState(x,   y+1, 1);
     world->setCellState(x+1, y+1, 1);
     world->setCellState(x,   y,   1);
-    world->setCellState(x+1, y-1, 1); // Achtung: y-1 muss >= 0 sein
+    world->setCellState(x+1, y-1, 1);
     world->setCellState(x+2, y,   1);
-
-    std::cout << "Methuselah (z.B. R-Pentomino) hinzugefuegt.\n";
+    std::cout << "Methuselah (R-Pentomino) added.\n";
 }

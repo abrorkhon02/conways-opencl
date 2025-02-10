@@ -141,29 +141,31 @@ gol_opencl/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/build
 .PHONY : gol_opencl/fast
 
-gol_opencl.obj: gol_opencl.cpp.obj
-.PHONY : gol_opencl.obj
+#=============================================================================
+# Target rules for targets named performance_measure
 
-# target to build an object file
-gol_opencl.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj
-.PHONY : gol_opencl.cpp.obj
+# Build rule for target.
+performance_measure: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 performance_measure
+.PHONY : performance_measure
 
-gol_opencl.i: gol_opencl.cpp.i
-.PHONY : gol_opencl.i
+# fast build rule for target.
+performance_measure/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/build
+.PHONY : performance_measure/fast
 
-# target to preprocess a source file
-gol_opencl.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/gol_opencl.cpp.i
-.PHONY : gol_opencl.cpp.i
+#=============================================================================
+# Target rules for targets named test_save
 
-gol_opencl.s: gol_opencl.cpp.s
-.PHONY : gol_opencl.s
+# Build rule for target.
+test_save: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 test_save
+.PHONY : test_save
 
-# target to generate assembly for a file
-gol_opencl.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/gol_opencl.cpp.s
-.PHONY : gol_opencl.cpp.s
+# fast build rule for target.
+test_save/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/build
+.PHONY : test_save/fast
 
 src/CLI.obj: src/CLI.cpp.obj
 .PHONY : src/CLI.obj
@@ -195,6 +197,7 @@ src/GameOfLife.obj: src/GameOfLife.cpp.obj
 # target to build an object file
 src/GameOfLife.cpp.obj:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/src/GameOfLife.cpp.obj
 .PHONY : src/GameOfLife.cpp.obj
 
 src/GameOfLife.i: src/GameOfLife.cpp.i
@@ -203,6 +206,7 @@ src/GameOfLife.i: src/GameOfLife.cpp.i
 # target to preprocess a source file
 src/GameOfLife.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/src/GameOfLife.cpp.i
 .PHONY : src/GameOfLife.cpp.i
 
 src/GameOfLife.s: src/GameOfLife.cpp.s
@@ -211,7 +215,32 @@ src/GameOfLife.s: src/GameOfLife.cpp.s
 # target to generate assembly for a file
 src/GameOfLife.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/src/GameOfLife.cpp.s
 .PHONY : src/GameOfLife.cpp.s
+
+src/gol_opencl.obj: src/gol_opencl.cpp.obj
+.PHONY : src/gol_opencl.obj
+
+# target to build an object file
+src/gol_opencl.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj
+.PHONY : src/gol_opencl.cpp.obj
+
+src/gol_opencl.i: src/gol_opencl.cpp.i
+.PHONY : src/gol_opencl.i
+
+# target to preprocess a source file
+src/gol_opencl.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.i
+.PHONY : src/gol_opencl.cpp.i
+
+src/gol_opencl.s: src/gol_opencl.cpp.s
+.PHONY : src/gol_opencl.s
+
+# target to generate assembly for a file
+src/gol_opencl.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.s
+.PHONY : src/gol_opencl.cpp.s
 
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
@@ -237,6 +266,54 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\game_of_life.dir\build.make CMakeFiles/game_of_life.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/performance_measure.obj: src/performance_measure.cpp.obj
+.PHONY : src/performance_measure.obj
+
+# target to build an object file
+src/performance_measure.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/src/performance_measure.cpp.obj
+.PHONY : src/performance_measure.cpp.obj
+
+src/performance_measure.i: src/performance_measure.cpp.i
+.PHONY : src/performance_measure.i
+
+# target to preprocess a source file
+src/performance_measure.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/src/performance_measure.cpp.i
+.PHONY : src/performance_measure.cpp.i
+
+src/performance_measure.s: src/performance_measure.cpp.s
+.PHONY : src/performance_measure.s
+
+# target to generate assembly for a file
+src/performance_measure.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/src/performance_measure.cpp.s
+.PHONY : src/performance_measure.cpp.s
+
+src/test_save.obj: src/test_save.cpp.obj
+.PHONY : src/test_save.obj
+
+# target to build an object file
+src/test_save.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/src/test_save.cpp.obj
+.PHONY : src/test_save.cpp.obj
+
+src/test_save.i: src/test_save.cpp.i
+.PHONY : src/test_save.i
+
+# target to preprocess a source file
+src/test_save.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/src/test_save.cpp.i
+.PHONY : src/test_save.cpp.i
+
+src/test_save.s: src/test_save.cpp.s
+.PHONY : src/test_save.s
+
+# target to generate assembly for a file
+src/test_save.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/src/test_save.cpp.s
+.PHONY : src/test_save.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -247,18 +324,26 @@ help:
 	@echo ... rebuild_cache
 	@echo ... game_of_life
 	@echo ... gol_opencl
-	@echo ... gol_opencl.obj
-	@echo ... gol_opencl.i
-	@echo ... gol_opencl.s
+	@echo ... performance_measure
+	@echo ... test_save
 	@echo ... src/CLI.obj
 	@echo ... src/CLI.i
 	@echo ... src/CLI.s
 	@echo ... src/GameOfLife.obj
 	@echo ... src/GameOfLife.i
 	@echo ... src/GameOfLife.s
+	@echo ... src/gol_opencl.obj
+	@echo ... src/gol_opencl.i
+	@echo ... src/gol_opencl.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
+	@echo ... src/performance_measure.obj
+	@echo ... src/performance_measure.i
+	@echo ... src/performance_measure.s
+	@echo ... src/test_save.obj
+	@echo ... src/test_save.i
+	@echo ... src/test_save.s
 .PHONY : help
 
 

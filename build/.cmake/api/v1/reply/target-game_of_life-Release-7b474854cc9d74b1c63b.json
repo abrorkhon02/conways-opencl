@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "gol_opencl.exe"
+			"path" : "game_of_life.exe"
 		},
 		{
-			"path" : "gol_opencl.pdb"
+			"path" : "game_of_life.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -14,7 +14,8 @@
 		"commands" : 
 		[
 			"add_executable",
-			"target_link_libraries"
+			"add_compile_options",
+			"target_include_directories"
 		],
 		"files" : 
 		[
@@ -28,13 +29,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 15,
+				"line" : 9,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 18,
+				"line" : 6,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 14,
 				"parent" : 0
 			}
 		]
@@ -45,15 +52,18 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu++17"
+					"fragment" : "-O3 -DNDEBUG -std=gnu++17"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-O3"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 2,
-					"isSystem" : true,
-					"path" : "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include"
+					"backtrace" : 3,
+					"path" : "C:/Users/Asimov/Desktop/develop/conways-opencl/include"
 				}
 			],
 			"language" : "CXX",
@@ -67,27 +77,24 @@
 			},
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1,
+				2
 			]
 		}
 	],
-	"id" : "gol_opencl::@6890427a1f51a3e7e1df",
+	"id" : "game_of_life::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "-O3 -DNDEBUG",
 				"role" : "flags"
 			},
 			{
 				"fragment" : "",
 				"role" : "flags"
-			},
-			{
-				"backtrace" : 2,
-				"fragment" : "\"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.6\\lib\\x64\\OpenCL.lib\"",
-				"role" : "libraries"
 			},
 			{
 				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
@@ -96,8 +103,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "gol_opencl",
-	"nameOnDisk" : "gol_opencl.exe",
+	"name" : "game_of_life",
+	"nameOnDisk" : "game_of_life.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -109,7 +116,9 @@
 			"name" : "Source Files",
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1,
+				2
 			]
 		}
 	],
@@ -118,7 +127,19 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "gol_opencl.cpp",
+			"path" : "src/main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/CLI.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/GameOfLife.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
