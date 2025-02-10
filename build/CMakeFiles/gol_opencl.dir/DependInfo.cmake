@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/Asimov/Desktop/develop/conways-opencl/gol_opencl.cpp" "CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj" "gcc" "CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj.d"
+  "C:/Users/Asimov/Desktop/develop/conways-opencl/src/gol_opencl.cpp" "CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj" "gcc" "CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

@@ -1,45 +1,41 @@
-#ifndef GAME_OF_LIFE_H
-#define GAME_OF_LIFE_H
+#ifndef GAMEOFLIFE_H
+#define GAMEOFLIFE_H
 
 #include <vector>
-#include <cstdlib>
-#include <iostream>
 #include <string>
 
-class GameOfLife
-{
+class GameOfLife {
+public:
+    // Constructors
+    GameOfLife(size_t width, size_t height);
+    GameOfLife(const std::string &filename);
+
+    // Methods
+    void evolveScalar();
+    void print() const;
+    void randomize(double aliveProbability);
+    void setCellState(size_t x, size_t y, int state);
+    int getCellState(size_t x, size_t y) const;
+    void setCellState1D(size_t idx, int state);
+    int getCellState1D(size_t idx) const;
+    void saveToFile(const std::string &filename);
+
+    // Getters
+    size_t getWidth() const;
+    size_t getHeight() const;
+    const std::vector<int>& getCurrentGrid() const;
+
 private:
     size_t m_width;
     size_t m_height;
-
     std::vector<int> m_currentGrid;
     std::vector<int> m_nextGrid;
 
-    inline size_t index(size_t x, size_t y) const {
-        return y * m_width + x;
-    }
+    // Renamed helper function to avoid name conflicts
+    size_t cellIndex(size_t x, size_t y) const { return y * m_width + x; }
 
+    // Declaration of countNeighbors
     int countNeighbors(size_t x, size_t y) const;
-
-public:
-    GameOfLife(size_t width, size_t height);
-    GameOfLife(const std::string& filename);
-
-    void evolveScalar();
-
-    void print() const;
-
-    void randomize(double aliveProbability = 0.2);
-
-    size_t getWidth() const { return m_width; }
-    size_t getHeight() const { return m_height; }
-
-    void setCellState(size_t x, size_t y, int state);
-    int  getCellState(size_t x, size_t y) const;
-
-    void setCellState1D(size_t index, int state);
-    int getCellState1D(size_t index) const;
-    void saveToFile(const std::string& filename);
 };
 
-#endif
+#endif // GAMEOFLIFE_H

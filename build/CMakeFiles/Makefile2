@@ -64,11 +64,15 @@ CMAKE_BINARY_DIR = C:\Users\Asimov\Desktop\develop\conways-opencl\build
 # The main recursive "all" target.
 all: CMakeFiles/game_of_life.dir/all
 all: CMakeFiles/gol_opencl.dir/all
+all: CMakeFiles/performance_measure.dir/all
+all: CMakeFiles/test_save.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/game_of_life.dir/codegen
 codegen: CMakeFiles/gol_opencl.dir/codegen
+codegen: CMakeFiles/performance_measure.dir/codegen
+codegen: CMakeFiles/test_save.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -78,6 +82,8 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/game_of_life.dir/clean
 clean: CMakeFiles/gol_opencl.dir/clean
+clean: CMakeFiles/performance_measure.dir/clean
+clean: CMakeFiles/test_save.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -141,6 +147,68 @@ CMakeFiles/gol_opencl.dir/codegen:
 CMakeFiles/gol_opencl.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\gol_opencl.dir\build.make CMakeFiles/gol_opencl.dir/clean
 .PHONY : CMakeFiles/gol_opencl.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/performance_measure.dir
+
+# All Build rule for target.
+CMakeFiles/performance_measure.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles --progress-num=7,8 "Built target performance_measure"
+.PHONY : CMakeFiles/performance_measure.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/performance_measure.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/performance_measure.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles 0
+.PHONY : CMakeFiles/performance_measure.dir/rule
+
+# Convenience name for target.
+performance_measure: CMakeFiles/performance_measure.dir/rule
+.PHONY : performance_measure
+
+# codegen rule for target.
+CMakeFiles/performance_measure.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/codegen
+.PHONY : CMakeFiles/performance_measure.dir/codegen
+
+# clean rule for target.
+CMakeFiles/performance_measure.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\performance_measure.dir\build.make CMakeFiles/performance_measure.dir/clean
+.PHONY : CMakeFiles/performance_measure.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/test_save.dir
+
+# All Build rule for target.
+CMakeFiles/test_save.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles --progress-num=9,10,11 "Built target test_save"
+.PHONY : CMakeFiles/test_save.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/test_save.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles 3
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/test_save.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Asimov\Desktop\develop\conways-opencl\build\CMakeFiles 0
+.PHONY : CMakeFiles/test_save.dir/rule
+
+# Convenience name for target.
+test_save: CMakeFiles/test_save.dir/rule
+.PHONY : test_save
+
+# codegen rule for target.
+CMakeFiles/test_save.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/codegen
+.PHONY : CMakeFiles/test_save.dir/codegen
+
+# clean rule for target.
+CMakeFiles/test_save.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\test_save.dir\build.make CMakeFiles/test_save.dir/clean
+.PHONY : CMakeFiles/test_save.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

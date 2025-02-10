@@ -1,26 +1,44 @@
 [
 {
   "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\game_of_life.dir\\src\\main.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\main.cpp",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -O3 -o CMakeFiles\\game_of_life.dir\\src\\main.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\main.cpp",
   "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/main.cpp",
   "output": "CMakeFiles/game_of_life.dir/src/main.cpp.obj"
 },
 {
   "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\game_of_life.dir\\src\\CLI.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\CLI.cpp",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -O3 -o CMakeFiles\\game_of_life.dir\\src\\CLI.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\CLI.cpp",
   "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/CLI.cpp",
   "output": "CMakeFiles/game_of_life.dir/src/CLI.cpp.obj"
 },
 {
   "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\game_of_life.dir\\src\\GameOfLife.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\GameOfLife.cpp",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/game_of_life.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -O3 -o CMakeFiles\\game_of_life.dir\\src\\GameOfLife.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\GameOfLife.cpp",
   "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/GameOfLife.cpp",
   "output": "CMakeFiles/game_of_life.dir/src/GameOfLife.cpp.obj"
 },
 {
   "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/gol_opencl.dir/includes_CXX.rsp -g -std=gnu++17 -o CMakeFiles\\gol_opencl.dir\\gol_opencl.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\gol_opencl.cpp",
-  "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/gol_opencl.cpp",
-  "output": "CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj"
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DDISABLE_PRINT @CMakeFiles/gol_opencl.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -O3 -o CMakeFiles\\gol_opencl.dir\\src\\gol_opencl.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\gol_opencl.cpp",
+  "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/gol_opencl.cpp",
+  "output": "CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj"
+},
+{
+  "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/performance_measure.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -O3 -o CMakeFiles\\performance_measure.dir\\src\\performance_measure.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\performance_measure.cpp",
+  "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/performance_measure.cpp",
+  "output": "CMakeFiles/performance_measure.dir/src/performance_measure.cpp.obj"
+},
+{
+  "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/test_save.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -O3 -o CMakeFiles\\test_save.dir\\src\\test_save.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\test_save.cpp",
+  "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/test_save.cpp",
+  "output": "CMakeFiles/test_save.dir/src/test_save.cpp.obj"
+},
+{
+  "directory": "C:/Users/Asimov/Desktop/develop/conways-opencl/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  @CMakeFiles/test_save.dir/includes_CXX.rsp -O3 -DNDEBUG -std=gnu++17 -O3 -o CMakeFiles\\test_save.dir\\src\\GameOfLife.cpp.obj -c C:\\Users\\Asimov\\Desktop\\develop\\conways-opencl\\src\\GameOfLife.cpp",
+  "file": "C:/Users/Asimov/Desktop/develop/conways-opencl/src/GameOfLife.cpp",
+  "output": "CMakeFiles/test_save.dir/src/GameOfLife.cpp.obj"
 }
 ]

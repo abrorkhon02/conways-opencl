@@ -1,1 +1,1 @@
--isystem "C:/PROGRA~1/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include"
+-I"C:/Users/Asimov/Desktop/develop/conways-opencl/include" -isystem "C:/PROGRA~1/NVIDIA GPU Computing Toolkit/CUDA/v12.6/include"

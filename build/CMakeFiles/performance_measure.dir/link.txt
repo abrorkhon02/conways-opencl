@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\performance_measure.dir/objects.a
+C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\performance_measure.dir/objects.a @CMakeFiles\performance_measure.dir\objects1.rsp
+C:\msys64\ucrt64\bin\g++.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\performance_measure.dir/objects.a -Wl,--no-whole-archive -o performance_measure.exe -Wl,--out-implib,libperformance_measure.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\performance_measure.dir\linkLibs.rsp

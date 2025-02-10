@@ -1,5 +1,5 @@
-CMakeFiles/gol_opencl.dir/gol_opencl.cpp.obj: \
- C:\Users\Asimov\Desktop\develop\conways-opencl\gol_opencl.cpp \
+CMakeFiles/gol_opencl.dir/src/gol_opencl.cpp.obj: \
+ C:\Users\Asimov\Desktop\develop\conways-opencl\src\gol_opencl.cpp \
  C:/PROGRA~1/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v12.6/include/CL/cl.h \
  C:/PROGRA~1/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v12.6/include/CL/cl_version.h \
  C:/PROGRA~1/NVIDIA\ GPU\ Computing\ Toolkit/CUDA/v12.6/include/CL/cl_platform.h \
