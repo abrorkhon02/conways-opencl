@@ -32,4 +32,4 @@ private:
     void addMethuselah();
 };
 
-#endif // CLI_H
+#endif

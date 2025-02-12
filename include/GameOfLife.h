@@ -31,11 +31,8 @@ private:
     std::vector<int> m_currentGrid;
     std::vector<int> m_nextGrid;
 
-    // Renamed helper function to avoid name conflicts
     size_t cellIndex(size_t x, size_t y) const { return y * m_width + x; }
-
-    // Declaration of countNeighbors
     int countNeighbors(size_t x, size_t y) const;
 };
 
-#endif // GAMEOFLIFE_H
+#endif

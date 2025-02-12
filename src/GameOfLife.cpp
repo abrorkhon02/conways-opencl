@@ -16,7 +16,7 @@ GameOfLife::GameOfLife(const std::string &filename) {
     if (!infile.is_open())
         throw std::runtime_error("Failed to open file: " + filename);
     
-    // Read dimensions with error checking.
+    // Read dimensions with error checking
     if (!(infile >> m_width >> m_height))
         throw std::runtime_error("Invalid file format: width and height not found.");
     
@@ -26,7 +26,7 @@ GameOfLife::GameOfLife(const std::string &filename) {
     m_currentGrid.resize(m_width * m_height, 0);
     m_nextGrid.resize(m_width * m_height, 0);
     
-    // Read cell states.
+    // Read cell states
     for (size_t i = 0; i < m_width * m_height; ++i) {
         int cellValue = 0;
         if (!(infile >> cellValue))
