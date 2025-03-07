@@ -6,6 +6,16 @@
 #include <limits>
 #include <cstddef>
 #include <vector>
+#include <functional>
+
+
+
+constexpr size_t hash(const char* str) {
+    return str[0] ? std::hash<char>{}(str[0]) + 33 * hash(str + 1) : 5381;
+}
+size_t hash(const std::string& str) {
+    return hash(str.c_str());
+}
 
 CLI::CLI()
     : world(nullptr), printAfterGeneration(false), delayMs(0)
@@ -34,66 +44,71 @@ void CLI::processCommand(const std::string& command) {
     std::string token;
     iss >> token;
     
-    if (token == "create") {
-        createWorld();
+    switch(hash(token)) {
+        case hash("create"):
+            createWorld();
+            break;
+        case hash("load"):
+            loadWorld();
+            break;
+        case hash("save"):
+            saveWorld();
+            break;
+        case hash("run"): {
+            std::string mode;
+            int generations = 0;
+            iss >> mode >> generations;
+            runEvolution(mode, generations);
+            break;
+        }
+        case hash("set"):
+            setCellState();
+            break;
+        case hash("get"):
+            getCellState();
+            break;
+        case hash("glider"):
+            addGlider();
+            break;
+        case hash("toad"):
+            addToad();
+            break;
+        case hash("beacon"):
+            addBeacon();
+            break;
+        case hash("methuselah"):
+            addMethuselah();
+            break;
+        case hash("print"): {
+            std::string mode;
+            iss >> mode;
+            if (mode == "on")
+                printAfterGeneration = true;
+            else if (mode == "off")
+                printAfterGeneration = false;
+            else
+                std::cout << "Please use 'print on' or 'print off'.\n";
+            std::cout << "Printing after generation: " << (printAfterGeneration ? "enabled" : "disabled") << std::endl;
+            break;
+        }
+        case hash("delay"): {
+            iss >> delayMs;
+            std::cout << "Delay set to " << delayMs << " ms.\n";
+            break;
+        }
+        case hash("help"):
+            printHelp();
+            break;
+        case hash("set1d"):
+            setCellState1D();
+            break;
+        case hash("get1d"):
+            getCellState1D();
+            break;
+        default:
+            std::cout << "Unknown command. Please enter 'help' for a list of commands.\n";
+            break;
     }
-    else if (token == "load") {
-        loadWorld();
-    }
-    else if (token == "save") {
-        saveWorld();
-    }
-    else if (token == "run") {
-        std::string mode;
-        int generations = 0;
-        iss >> mode >> generations;
-        runEvolution(mode, generations);
-    }
-    else if (token == "set") {
-        setCellState();
-    }
-    else if (token == "get") {
-        getCellState();
-    }
-    else if (token == "glider") {
-        addGlider();
-    }
-    else if (token == "toad") {
-        addToad();
-    }
-    else if (token == "beacon") {
-        addBeacon();
-    }
-    else if (token == "methuselah") {
-        addMethuselah();
-    }
-    else if (token == "print") {
-        std::string mode;
-        iss >> mode;
-        if (mode == "on")
-            printAfterGeneration = true;
-        else if (mode == "off")
-            printAfterGeneration = false;
-        else
-            std::cout << "Please use 'print on' or 'print off'.\n";
-        std::cout << "Printing after generation: " << (printAfterGeneration ? "enabled" : "disabled") << std::endl;
-    }
-    else if (token == "delay") {
-        iss >> delayMs;
-        std::cout << "Delay set to " << delayMs << " ms.\n";
-    }
-    else if (token == "help") {
-        printHelp();
-    }
-    else if (token == "set1d") {
-        setCellState1D();
-    }   
-    else if (token == "get1d") {
-        getCellState1D();
-    }
-    else {
-        std::cout << "Unknown command. Please enter 'help' for a list of commands.\n";
-    }  
 }
 
 void CLI::printHelp() const {
