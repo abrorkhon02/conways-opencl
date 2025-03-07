@@ -3,7 +3,7 @@
 #include <vector>
 #include <cstdlib>
 #include <string>
-#include <cstring> 
+#include <cstring>
 
 #ifdef DISABLE_PRINT
 #define SHOULD_PRINT 0
@@ -11,7 +11,7 @@
 #define SHOULD_PRINT 1
 #endif
 
-// -------------- KERNEL: Embedded as a string literal --------------
+
 static const char *golKernelSrc = R"CLC(
 #define INDEXFN(xx, yy, w) ((yy)*(w) + (xx))
 
@@ -45,6 +45,7 @@ __kernel void evolveToroidal(__global const int* currentGrid,
 }
 )CLC";
 
+
 static void printGrid(const std::vector<int>& grid, int width, int height)
 {
     for (int y = 0; y < height; y++) {
@@ -55,6 +56,120 @@ static void printGrid(const std::vector<int>& grid, int width, int height)
     }
     std::cout << "\n";
 }
+
+
+struct OpenCLResources {
+    cl_context context = nullptr;
+    cl_command_queue queue = nullptr;
+    cl_program program = nullptr;
+    cl_kernel kernel = nullptr;
+    cl_mem currentBuf = nullptr;
+    cl_mem nextBuf = nullptr;
+    cl_device_id device = nullptr;
+};
+
+
+OpenCLResources setupOpenCL(const std::vector<int>& hostGrid, 
+                            int width, 
+                            int height, 
+                            cl_int &err)
+{
+    OpenCLResources res;
+
+    cl_uint numPlatforms = 0;
+    clGetPlatformIDs(0, nullptr, &numPlatforms);
+    if (numPlatforms == 0) {
+        throw std::runtime_error("No OpenCL platforms found.");
+    }
+    std::vector<cl_platform_id> platforms(numPlatforms);
+    clGetPlatformIDs(numPlatforms, platforms.data(), nullptr);
+    cl_platform_id platform = platforms[0];
+
+    cl_uint numDevices = 0;
+    err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
+    std::vector<cl_device_id> devices;
+    if(numDevices == 0) {
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, 0, nullptr, &numDevices);
+        if(numDevices == 0) {
+            throw std::runtime_error("No GPU/CPU devices found.");
+        }
+        devices.resize(numDevices);
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, numDevices, devices.data(), nullptr);
+    } else {
+        devices.resize(numDevices);
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, numDevices, devices.data(), nullptr);
+    }
+    res.device = devices[0];
+
+    res.context = clCreateContext(nullptr, 1, &res.device, nullptr, nullptr, &err);
+    cl_queue_properties properties[] = {0};
+    res.queue = clCreateCommandQueueWithProperties(res.context, res.device, properties, &err);
+
+    const char* source = golKernelSrc;
+    size_t sourceSize = std::strlen(source);
+    res.program = clCreateProgramWithSource(res.context, 1, &source, &sourceSize, &err);
+    err = clBuildProgram(res.program, 1, &res.device, nullptr, nullptr, nullptr);
+    if (err != CL_SUCCESS) {
+        size_t logSize;
+        clGetProgramBuildInfo(res.program, res.device, CL_PROGRAM_BUILD_LOG, 0, nullptr, &logSize);
+        std::string buildLog(logSize, ' ');
+        clGetProgramBuildInfo(res.program, res.device, CL_PROGRAM_BUILD_LOG, logSize, &buildLog[0], nullptr);
+        throw std::runtime_error("Build error:\n" + buildLog);
+    }
+
+    res.kernel = clCreateKernel(res.program, "evolveToroidal", &err);
+  
+    size_t gridSize = width * height;
+    res.currentBuf = clCreateBuffer(
+        res.context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
+        sizeof(int) * gridSize,
+        hostGrid.data(), &err
+    );
+    res.nextBuf = clCreateBuffer(
+        res.context, CL_MEM_READ_WRITE,
+        sizeof(int) * gridSize,
+        nullptr, &err
+    );
+
+    err = clSetKernelArg(res.kernel, 2, sizeof(int), &width);
+    err = clSetKernelArg(res.kernel, 3, sizeof(int), &height);
+
+    return res;
+}
+
+
+void runSimulation(OpenCLResources& res, 
+                   int width, 
+                   int height, 
+                   int generations,
+                   cl_int &err)
+{
+    size_t globalWorkSize[2] = { static_cast<size_t>(width), static_cast<size_t>(height) };
+
+    for(int i = 0; i < generations; i++) {
+        err = clSetKernelArg(res.kernel, 0, sizeof(cl_mem), &res.currentBuf);
+        err = clSetKernelArg(res.kernel, 1, sizeof(cl_mem), &res.nextBuf);
+        
+        err = clEnqueueNDRangeKernel(res.queue, res.kernel, 2, nullptr, globalWorkSize, nullptr, 0, nullptr, nullptr);
+        clFinish(res.queue);
+
+        cl_mem temp = res.currentBuf;
+        res.currentBuf = res.nextBuf;
+        res.nextBuf = temp;
+    }
+}
+
+
+void cleanupOpenCL(OpenCLResources& res)
+{
+    if(res.currentBuf) clReleaseMemObject(res.currentBuf);
+    if(res.nextBuf) clReleaseMemObject(res.nextBuf);
+    if(res.kernel) clReleaseKernel(res.kernel);
+    if(res.program) clReleaseProgram(res.program);
+    if(res.queue) clReleaseCommandQueue(res.queue);
+    if(res.context) clReleaseContext(res.context);
+}
+
 
 int main(int argc, char* argv[]) {
     if(argc < 4) {
@@ -67,7 +182,6 @@ int main(int argc, char* argv[]) {
     int generations = std::atoi(argv[3]);
     size_t gridSize = width * height;
 
-    // Setup grid data (host)
     std::vector<int> hostGrid(gridSize, 0);
     for (size_t i = 0; i < gridSize; i++) {
         hostGrid[i] = ((rand() % 100) < 30) ? 1 : 0;
@@ -79,106 +193,29 @@ int main(int argc, char* argv[]) {
     }
 
     cl_int err = 0;
+    OpenCLResources resources;
 
-    // Get the first available platform
-    cl_uint numPlatforms = 0;
-    clGetPlatformIDs(0, nullptr, &numPlatforms);
-    if (numPlatforms == 0) {
-        std::cerr << "No OpenCL platforms found.\n";
-        return 1;
-    }
-    std::vector<cl_platform_id> platforms(numPlatforms);
-    clGetPlatformIDs(numPlatforms, platforms.data(), nullptr);
-    cl_platform_id platform = platforms[0];
+    try {
+        resources = setupOpenCL(hostGrid, width, height, err);
 
-    // Get a device (GPU or CPU)
-    cl_uint numDevices = 0;
-    err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
-    std::vector<cl_device_id> devices;
-    if(numDevices == 0) {
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, 0, nullptr, &numDevices);
-        if(numDevices == 0) {
-            std::cerr << "No GPU/CPU devices found.\n";
-            return 1;
+        runSimulation(resources, width, height, generations, err);
+
+        std::vector<int> finalGrid(gridSize, 0);
+        err = clEnqueueReadBuffer(resources.queue, resources.currentBuf, CL_TRUE, 0,
+                                  sizeof(int) * gridSize, finalGrid.data(), 0, nullptr, nullptr);
+
+        if (SHOULD_PRINT) {
+            std::cout << "\nFinal Grid:\n";
+            printGrid(finalGrid, width, height);
         }
-        devices.resize(numDevices);
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, numDevices, devices.data(), nullptr);
-    } else {
-        devices.resize(numDevices);
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, numDevices, devices.data(), nullptr);
     }
-    cl_device_id device = devices[0];
-
-    // Create context and command queue
-    cl_context context = clCreateContext(nullptr, 1, &device, nullptr, nullptr, &err);
-    cl_queue_properties properties[] = {0};
-    cl_command_queue queue = clCreateCommandQueueWithProperties(context, device, properties, &err);
-
-    // Build the program from source
-    const char* source = golKernelSrc;
-    size_t sourceSize = std::strlen(source);
-    cl_program program = clCreateProgramWithSource(context, 1, &source, &sourceSize, &err);
-    err = clBuildProgram(program, 1, &device, nullptr, nullptr, nullptr);
-    if (err != CL_SUCCESS) {
-        size_t logSize;
-        clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, nullptr, &logSize);
-        std::string buildLog(logSize, ' ');
-        clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, logSize, &buildLog[0], nullptr);
-        std::cerr << "Build error:\n" << buildLog << std::endl;
+    catch (const std::exception &ex) {
+        std::cerr << "Exception: " << ex.what() << std::endl;
+        cleanupOpenCL(resources);
         return 1;
     }
 
-    cl_kernel kernel = clCreateKernel(program, "evolveToroidal", &err);
-
-    // Create buffers
-    cl_mem currentBuf = clCreateBuffer(
-        context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-        sizeof(int) * gridSize,
-        hostGrid.data(), &err
-    );
-    cl_mem nextBuf = clCreateBuffer(
-        context, CL_MEM_READ_WRITE,
-        sizeof(int) * gridSize,
-        nullptr, &err
-    );
-
-    // Set fixed kernel args (width and height)
-    err = clSetKernelArg(kernel, 2, sizeof(int), &width);
-    err = clSetKernelArg(kernel, 3, sizeof(int), &height);
-
-    size_t globalWorkSize[2] = { static_cast<size_t>(width), static_cast<size_t>(height) };
-
-    // Evolution loop with buffer swapping
-    for(int i = 0; i < generations; i++) {
-        // Set kernel args for current iteration (buffer pointers may change each loop)
-        err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &currentBuf);
-        err = clSetKernelArg(kernel, 1, sizeof(cl_mem), &nextBuf);
-        
-        err = clEnqueueNDRangeKernel(queue, kernel, 2, nullptr, globalWorkSize, nullptr, 0, nullptr, nullptr);
-        clFinish(queue);
-
-        // Swap buffers: currentBuf <-> nextBuf
-        cl_mem temp = currentBuf;
-        currentBuf = nextBuf;
-        nextBuf = temp;
-    }
-
-    // Read final grid from currentBuf (final result is in currentBuf after swapping)
-    std::vector<int> finalGrid(gridSize, 0);
-    err = clEnqueueReadBuffer(queue, currentBuf, CL_TRUE, 0, sizeof(int) * gridSize, finalGrid.data(), 0, nullptr, nullptr);
-
-    if (SHOULD_PRINT) {
-        std::cout << "\nFinal Grid:\n";
-        printGrid(finalGrid, width, height);
-    }
-
-    // Cleanup resources
-    clReleaseMemObject(currentBuf);
-    clReleaseMemObject(nextBuf);
-    clReleaseKernel(kernel);
-    clReleaseProgram(program);
-    clReleaseCommandQueue(queue);
-    clReleaseContext(context);
+    cleanupOpenCL(resources);
 
     return 0;
 }
