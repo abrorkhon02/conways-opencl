@@ -6,7 +6,9 @@
 #include <limits>
 #include <cstddef>
 #include <vector>
+#include <unordered_map>
 #include <functional>
+#include <sstream>
 
 
 
@@ -40,46 +42,28 @@ void CLI::run() {
 }
 
 void CLI::processCommand(const std::string& command) {
-    std::istringstream iss(command);
-    std::string token;
-    iss >> token;
-    
-    switch(hash(token)) {
-        case hash("create"):
-            createWorld();
-            break;
-        case hash("load"):
-            loadWorld();
-            break;
-        case hash("save"):
-            saveWorld();
-            break;
-        case hash("run"): {
+    size_t pos = command.find(' ');
+    std::string token = (pos == std::string::npos) ? command : command.substr(0, pos);
+    std::string params = (pos == std::string::npos) ? "" : command.substr(pos + 1);
+    std::istringstream iss(params);
+
+    static const std::unordered_map<std::string, std::function<void(std::istringstream&)>> commandMap = {
+        { "create", [this](std::istringstream&){ createWorld(); } },
+        { "load",   [this](std::istringstream&){ loadWorld(); } },
+        { "save",   [this](std::istringstream&){ saveWorld(); } },
+        { "run",    [this](std::istringstream& iss){
             std::string mode;
             int generations = 0;
             iss >> mode >> generations;
             runEvolution(mode, generations);
-            break;
-        }
-        case hash("set"):
-            setCellState();
-            break;
-        case hash("get"):
-            getCellState();
-            break;
-        case hash("glider"):
-            addGlider();
-            break;
-        case hash("toad"):
-            addToad();
-            break;
-        case hash("beacon"):
-            addBeacon();
-            break;
-        case hash("methuselah"):
-            addMethuselah();
-            break;
-        case hash("print"): {
+        }},
+        { "set",    [this](std::istringstream&){ setCellState(); } },
+        { "get",    [this](std::istringstream&){ getCellState(); } },
+        { "glider", [this](std::istringstream&){ addGlider(); } },
+        { "toad",   [this](std::istringstream&){ addToad(); } },
+        { "beacon", [this](std::istringstream&){ addBeacon(); } },
+        { "methuselah", [this](std::istringstream&){ addMethuselah(); } },
+        { "print",  [this](std::istringstream& iss){
             std::string mode;
             iss >> mode;
             if (mode == "on")
@@ -88,26 +72,23 @@ void CLI::processCommand(const std::string& command) {
                 printAfterGeneration = false;
             else
                 std::cout << "Please use 'print on' or 'print off'.\n";
-            std::cout << "Printing after generation: " << (printAfterGeneration ? "enabled" : "disabled") << std::endl;
-            break;
-        }
-        case hash("delay"): {
+            std::cout << "Printing after generation: " 
+                      << (printAfterGeneration ? "enabled" : "disabled") << std::endl;
+        }},
+        { "delay",  [this](std::istringstream& iss){
             iss >> delayMs;
             std::cout << "Delay set to " << delayMs << " ms.\n";
-            break;
-        }
-        case hash("help"):
-            printHelp();
-            break;
-        case hash("set1d"):
-            setCellState1D();
-            break;
-        case hash("get1d"):
-            getCellState1D();
-            break;
-        default:
-            std::cout << "Unknown command. Please enter 'help' for a list of commands.\n";
-            break;
+        }},
+        { "help",   [this](std::istringstream&){ printHelp(); } },
+        { "set1d",  [this](std::istringstream&){ setCellState1D(); } },
+        { "get1d",  [this](std::istringstream&){ getCellState1D(); } }
+    };
+
+    auto it = commandMap.find(token);
+    if (it != commandMap.end()) {
+        it->second(iss);
+    } else {
+        std::cout << "Unknown command. Please enter 'help' for a list of commands.\n";
     }
 }
 
