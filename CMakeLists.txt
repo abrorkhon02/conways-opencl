@@ -5,7 +5,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Release)
 add_compile_options(-O3)
 
-# Main executable (CLI-based game)
+# Set OpenCL target version to avoid warnings
+add_compile_definitions(CL_TARGET_OPENCL_VERSION=120)
+
+find_package(OpenCL REQUIRED)
+
+include_directories(${OpenCL_INCLUDE_DIRS})
+
+# Main game of life executable
 add_executable(game_of_life
     src/main.cpp
     src/CLI.cpp
@@ -14,30 +21,16 @@ add_executable(game_of_life
 target_include_directories(game_of_life PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
-# OpenCL executable with printing disabled for performance measurement
-find_package(OpenCL REQUIRED)
-add_executable(gol_opencl
-    src/gol_opencl.cpp
-)
-target_include_directories(gol_opencl PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-target_link_libraries(gol_opencl PRIVATE OpenCL::OpenCL)
-target_compile_definitions(gol_opencl PRIVATE DISABLE_PRINT)
+target_include_directories(game_of_life PRIVATE ${OpenCL_INCLUDE_DIRS})
+target_link_libraries(game_of_life PRIVATE ${OpenCL_LIBRARIES})
 
 # Performance measurement executable
 add_executable(performance_measure
     src/performance_measure.cpp
+    src/GameOfLife.cpp
 )
 target_include_directories(performance_measure PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
-add_executable(test_save
-    src/test_save.cpp
-    src/GameOfLife.cpp   
-)
-target_include_directories(test_save PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+target_include_directories(performance_measure PRIVATE ${OpenCL_INCLUDE_DIRS})
+target_link_libraries(performance_measure PRIVATE ${OpenCL_LIBRARIES})

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cstdlib>
+#include "../include/GameOfLife.h"
 
 int main() {
     std::vector<std::pair<int, int>> gridSizes = {
@@ -13,36 +14,41 @@ int main() {
     };
 
     std::ofstream csvFile("simulation_results.csv");
-    csvFile << "Width,Height,Elapsed Time (s)\n";
+    csvFile << "Width,Height,Generations,Elapsed Time (s)\n";
 
     for (const auto& grid : gridSizes) {
         int width = grid.first;
         int height = grid.second;
-        int generations = 1;
-
-        std::cout << "Testing " << width << "x" << height << " grid...\n";
+        int generations = 100; 
         
-        std::stringstream cmd;
-#ifdef _WIN32
-        cmd << "gol_opencl.exe " << width << " " << height << " " << generations;
-#else
-        cmd << "./gol_opencl " << width << " " << height << " " << generations;
-#endif
-
-        auto start = std::chrono::steady_clock::now();
-        int ret = system(cmd.str().c_str());
-        auto end = std::chrono::steady_clock::now();
-
-        if (ret == 0) {
+        std::cout << "Testing " << width << "x" << height << " grid with OpenCL...\n";
+        
+        try {
+            GameOfLife world(width, height);
+            world.randomize(0.3);
+            auto start = std::chrono::steady_clock::now();
+            bool success = world.evolveOpenCL(generations);
+            if (!success) {
+                std::cerr << "OpenCL evolution failed for " << width << "x" << height << " grid\n";
+                continue;
+            }
+            
+            auto end = std::chrono::steady_clock::now();
             auto duration = std::chrono::duration<double>(end - start);
+            
             csvFile << width << "," << height << "," 
+                   << generations << "," 
                    << std::fixed << std::setprecision(6) 
                    << duration.count() << "\n";
+            
             std::cout << "Time: " << duration.count() << "s\n";
-        } else {
-            std::cerr << "Failed to run OpenCL evolution\n";
+            
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << "\n";
         }
     }
+    
     csvFile.close();
+    std::cout << "Results saved to simulation_results.csv\n";
     return 0;
 }

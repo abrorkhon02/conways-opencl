@@ -14,7 +14,7 @@ public:
 private:
     GameOfLife* world;
     bool printAfterGeneration;
-    int delayMs; // delay in milliseconds
+    int delayMs;
 
     void processCommand(const std::string& command);
     void printHelp() const;
@@ -30,6 +30,7 @@ private:
     void addToad();
     void addBeacon();
     void addMethuselah();
+    bool parseCoordinates(const std::string& input, size_t& x, size_t& y);
 };
 
 #endif

@@ -10,8 +10,6 @@
 #include <functional>
 #include <sstream>
 
-
-
 constexpr size_t hash(const char* str) {
     return str[0] ? std::hash<char>{}(str[0]) + 33 * hash(str + 1) : 5381;
 }
@@ -143,17 +141,22 @@ void CLI::runEvolution(const std::string& mode, int generations) {
             std::cout << "No world loaded.\n";
             return;
         }
-        std::cout << "Launching OpenCL evolution for " << generations << " generation(s)...\n";
-        // Construct command with width, height, and generation count
-        std::stringstream cmd;
-#ifdef _WIN32
-        cmd << "gol_opencl.exe " << world->getWidth() << " " << world->getHeight() << " " << generations;
-#else
-        cmd << "./gol_opencl " << world->getWidth() << " " << world->getHeight() << " " << generations;
-#endif
-        int ret = system(cmd.str().c_str());
-        if(ret != 0) {
-            std::cout << "OpenCL execution failed with code " << ret << "\n";
+        
+        std::cout << "Running OpenCL evolution for " << generations << " generation(s)...\n";
+        auto start = std::chrono::steady_clock::now();
+        
+        bool success = world->evolveOpenCL(generations);
+        
+        auto end = std::chrono::steady_clock::now();
+        auto duration = std::chrono::duration<double>(end - start);
+        
+        if (success) {
+            std::cout << "OpenCL evolution completed in " << duration.count() << " seconds.\n";
+            if (printAfterGeneration) {
+                world->print();
+            }
+        } else {
+            std::cout << "OpenCL evolution failed.\n";
         }
     } else if (mode == "scalar") {
         if(world) {
@@ -265,15 +268,23 @@ void CLI::addGlider() {
         std::cout << "No world loaded.\n";
         return;
     }
+    
     size_t x, y;
-    std::cout << "Enter (x, y) for glider placement:\n";
-    std::cin >> x >> y;
+    std::string input;
+    std::cout << "Enter coordinates for glider placement (format: x,y): ";
+    std::getline(std::cin, input);
+    
+    if (!parseCoordinates(input, x, y)) {
+        std::cout << "Invalid input format. Please use format: x,y\n";
+        return;
+    }
+    
     world->setCellState(x+1, y, 1);
     world->setCellState(x+2, y+1, 1);
     world->setCellState(x,   y+2, 1);
     world->setCellState(x+1, y+2, 1);
     world->setCellState(x+2, y+2, 1);
-    std::cout << "Glider added.\n";
+    std::cout << "Glider added at (" << x << "," << y << ").\n";
 }
 
 void CLI::addToad() {
@@ -281,17 +292,24 @@ void CLI::addToad() {
         std::cout << "No world available! Create or load a world first.\n";
         return;
     }
+    
     size_t x, y;
-    std::cout << "Enter (x, y) for toad placement: ";
-    std::cin >> x >> y;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::string input;
+    std::cout << "Enter coordinates for toad placement (format: x,y): ";
+    std::getline(std::cin, input);
+    
+    if (!parseCoordinates(input, x, y)) {
+        std::cout << "Invalid input format. Please use format: x,y\n";
+        return;
+    }
+    
     world->setCellState(x+1, y,   1);
     world->setCellState(x+2, y,   1);
     world->setCellState(x+3, y,   1);
     world->setCellState(x,   y+1, 1);
     world->setCellState(x+1, y+1, 1);
     world->setCellState(x+2, y+1, 1);
-    std::cout << "Toad added.\n";
+    std::cout << "Toad added at (" << x << "," << y << ").\n";
 }
 
 void CLI::addBeacon() {
@@ -299,10 +317,17 @@ void CLI::addBeacon() {
         std::cout << "No world available! Create or load a world first.\n";
         return;
     }
+    
     size_t x, y;
-    std::cout << "Enter (x, y) for beacon placement: ";
-    std::cin >> x >> y;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::string input;
+    std::cout << "Enter coordinates for beacon placement (format: x,y): ";
+    std::getline(std::cin, input);
+    
+    if (!parseCoordinates(input, x, y)) {
+        std::cout << "Invalid input format. Please use format: x,y\n";
+        return;
+    }
+    
     world->setCellState(x,   y,   1);
     world->setCellState(x+1, y,   1);
     world->setCellState(x,   y+1, 1);
@@ -311,7 +336,7 @@ void CLI::addBeacon() {
     world->setCellState(x+3, y+2, 1);
     world->setCellState(x+2, y+3, 1);
     world->setCellState(x+3, y+3, 1);
-    std::cout << "Beacon added.\n";
+    std::cout << "Beacon added at (" << x << "," << y << ").\n";
 }
 
 void CLI::addMethuselah() {
@@ -319,14 +344,51 @@ void CLI::addMethuselah() {
         std::cout << "No world available! Create or load a world first.\n";
         return;
     }
+    
     size_t x, y;
-    std::cout << "Enter (x, y) for Methuselah placement: ";
-    std::cin >> x >> y;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::string input;
+    std::cout << "Enter coordinates for Methuselah placement (format: x,y): ";
+    std::getline(std::cin, input);
+    
+    if (!parseCoordinates(input, x, y)) {
+        std::cout << "Invalid input format. Please use format: x,y\n";
+        return;
+    }
+    
     world->setCellState(x,   y+1, 1);
     world->setCellState(x+1, y+1, 1);
     world->setCellState(x,   y,   1);
     world->setCellState(x+1, y-1, 1);
     world->setCellState(x+2, y,   1);
-    std::cout << "Methuselah (R-Pentomino) added.\n";
+    std::cout << "Methuselah (R-Pentomino) added at (" << x << "," << y << ").\n";
+}
+
+bool CLI::parseCoordinates(const std::string& input, size_t& x, size_t& y) {
+    std::string cleanInput;
+    for (char c : input) {
+        if (!std::isspace(c)) {
+            cleanInput += c;
+        }
+    }
+    
+    if (cleanInput.size() >= 2 && cleanInput.front() == '(' && cleanInput.back() == ')') {
+        cleanInput = cleanInput.substr(1, cleanInput.size() - 2);
+    }
+    
+    size_t separatorPos = cleanInput.find(',');
+    if (separatorPos == std::string::npos) {
+        separatorPos = cleanInput.find(' ');
+    }
+    
+    if (separatorPos == std::string::npos || separatorPos == 0 || separatorPos == cleanInput.size() - 1) {
+        return false;
+    }
+    
+    try {
+        x = std::stoul(cleanInput.substr(0, separatorPos));
+        y = std::stoul(cleanInput.substr(separatorPos + 1));
+        return true;
+    } catch (const std::exception&) {
+        return false;
+    }
 }
