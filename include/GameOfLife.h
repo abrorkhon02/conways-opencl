@@ -1,7 +1,10 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <CL/cl.h> 
+
+#define CL_TARGET_OPENCL_VERSION 120
+#include <CL/cl.h>
+#include <iostream>
 
 class GameOfLife {
 private:
@@ -10,6 +13,7 @@ private:
     std::vector<int> m_currentGrid;
     std::vector<int> m_nextGrid;
     
+    // OpenCL resources
     cl_context context;
     cl_command_queue queue;
     cl_program program;
@@ -19,11 +23,17 @@ private:
     cl_device_id device;
     bool openclInitialized;
     
+    // Core methods
     int countNeighbors(size_t x, size_t y) const;
-    size_t cellIndex(size_t x, size_t y) const; 
+    size_t cellIndex(size_t x, size_t y) const;
     
+    // OpenCL methods
     bool initializeOpenCL();
     void cleanupOpenCL();
+    bool createOpenCLBuffers(cl_mem& inBuffer, cl_mem& outBuffer, size_t gridSize);
+    bool runOpenCLKernel(cl_mem inBuffer, cl_mem outBuffer);
+    bool readOpenCLResults(cl_mem buffer, size_t gridSize);
+    void printCLError(cl_int err, const char* operation);
 
 public:
     GameOfLife(size_t width, size_t height);
@@ -31,7 +41,7 @@ public:
     ~GameOfLife();
     
     void evolveScalar();
-    bool evolveOpenCL(int generations = 1); 
+    bool evolveOpenCL(int generations = 1);
     
     void print() const;
     void randomize(double aliveProbability = 0.3);

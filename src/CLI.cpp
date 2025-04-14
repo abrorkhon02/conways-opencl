@@ -1,4 +1,5 @@
 #include "CLI.h"
+#include "../include/SharedGlobals.h"
 #include <iostream>
 #include <sstream>
 #include <chrono>
@@ -20,6 +21,12 @@ size_t hash(const std::string& str) {
 CLI::CLI()
     : world(nullptr), printAfterGeneration(false), delayMs(0)
 {
+    // Initialize global variables
+    g_printAfterGeneration = printAfterGeneration;
+    g_delayMs = delayMs;
+    
+    // Initialize trace logging
+    init_trace_log();
 }
 
 CLI::~CLI() {
@@ -64,10 +71,14 @@ void CLI::processCommand(const std::string& command) {
         { "print",  [this](std::istringstream& iss){
             std::string mode;
             iss >> mode;
-            if (mode == "on")
+            if (mode == "on") {
                 printAfterGeneration = true;
-            else if (mode == "off")
+                g_printAfterGeneration = true; 
+            }
+            else if (mode == "off") {
                 printAfterGeneration = false;
+                g_printAfterGeneration = false; 
+            }
             else
                 std::cout << "Please use 'print on' or 'print off'.\n";
             std::cout << "Printing after generation: " 
@@ -75,6 +86,7 @@ void CLI::processCommand(const std::string& command) {
         }},
         { "delay",  [this](std::istringstream& iss){
             iss >> delayMs;
+            g_delayMs = delayMs;
             std::cout << "Delay set to " << delayMs << " ms.\n";
         }},
         { "help",   [this](std::istringstream&){ printHelp(); } },
@@ -127,8 +139,11 @@ void CLI::loadWorld() {
     std::cin >> filename;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     try {
+        GameOfLife* newWorld = new GameOfLife(filename);
+        
         delete world;
-        world = new GameOfLife(filename);
+        world = newWorld;
+        
         std::cout << "World loaded from '" << filename << "'." << std::endl;
     } catch (const std::exception& e) {
         std::cout << "Error loading world: " << e.what() << std::endl;
@@ -145,18 +160,24 @@ void CLI::runEvolution(const std::string& mode, int generations) {
         std::cout << "Running OpenCL evolution for " << generations << " generation(s)...\n";
         auto start = std::chrono::steady_clock::now();
         
-        bool success = world->evolveOpenCL(generations);
-        
-        auto end = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration<double>(end - start);
-        
-        if (success) {
-            std::cout << "OpenCL evolution completed in " << duration.count() << " seconds.\n";
-            if (printAfterGeneration) {
-                world->print();
+        try {
+            bool success = world->evolveOpenCL(generations);
+            
+            auto end = std::chrono::steady_clock::now();
+            auto duration = std::chrono::duration<double>(end - start);
+            
+            if (success) {
+                std::cout << "OpenCL evolution completed in " << duration.count() << " seconds.\n";
+                if (printAfterGeneration) {
+                    world->print();
+                }
+            } else {
+                std::cout << "OpenCL evolution failed.\n";
             }
-        } else {
-            std::cout << "OpenCL evolution failed.\n";
+        } catch (const std::exception& e) {
+            std::cerr << "Exception during OpenCL evolution: " << e.what() << std::endl;
+        } catch (...) {
+            std::cerr << "Unknown exception during OpenCL evolution" << std::endl;
         }
     } else if (mode == "scalar") {
         if(world) {

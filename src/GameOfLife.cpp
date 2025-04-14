@@ -1,9 +1,12 @@
 #include "../include/GameOfLife.h"
+#include "../include/SharedGlobals.h"
 #include <fstream>
 #include <stdexcept>
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include <thread>
+#include <chrono>
 
 static const char *golKernelSource = R"CLC(
 #define INDEXFN(xx, yy, w) ((yy)*(w) + (xx))
@@ -186,95 +189,171 @@ const std::vector<int>& GameOfLife::getCurrentGrid() const {
     return m_currentGrid;
 }
 
+void GameOfLife::printCLError(cl_int err, const char* operation) {
+    const char* errorString;
+    switch (err) {
+        case CL_SUCCESS: errorString = "Success"; break;
+        case CL_DEVICE_NOT_FOUND: errorString = "Device not found"; break;
+        case CL_DEVICE_NOT_AVAILABLE: errorString = "Device not available"; break;
+        case CL_COMPILER_NOT_AVAILABLE: errorString = "Compiler not available"; break;
+        case CL_MEM_OBJECT_ALLOCATION_FAILURE: errorString = "Memory allocation failure"; break;
+        case CL_OUT_OF_RESOURCES: errorString = "Out of resources"; break;
+        case CL_OUT_OF_HOST_MEMORY: errorString = "Out of host memory"; break;
+        case CL_PROFILING_INFO_NOT_AVAILABLE: errorString = "Profiling info not available"; break;
+        case CL_MEM_COPY_OVERLAP: errorString = "Memory copy overlap"; break;
+        case CL_IMAGE_FORMAT_MISMATCH: errorString = "Image format mismatch"; break;
+        case CL_IMAGE_FORMAT_NOT_SUPPORTED: errorString = "Image format not supported"; break;
+        case CL_BUILD_PROGRAM_FAILURE: errorString = "Build program failure"; break;
+        case CL_MAP_FAILURE: errorString = "Map failure"; break;
+        case CL_INVALID_VALUE: errorString = "Invalid value"; break;
+        case CL_INVALID_DEVICE_TYPE: errorString = "Invalid device type"; break;
+        case CL_INVALID_PLATFORM: errorString = "Invalid platform"; break;
+        case CL_INVALID_DEVICE: errorString = "Invalid device"; break;
+        case CL_INVALID_CONTEXT: errorString = "Invalid context"; break;
+        case CL_INVALID_QUEUE_PROPERTIES: errorString = "Invalid queue properties"; break;
+        case CL_INVALID_COMMAND_QUEUE: errorString = "Invalid command queue"; break;
+        case CL_INVALID_HOST_PTR: errorString = "Invalid host pointer"; break;
+        case CL_INVALID_MEM_OBJECT: errorString = "Invalid memory object"; break;
+        case CL_INVALID_IMAGE_FORMAT_DESCRIPTOR: errorString = "Invalid image format descriptor"; break;
+        case CL_INVALID_IMAGE_SIZE: errorString = "Invalid image size"; break;
+        case CL_INVALID_SAMPLER: errorString = "Invalid sampler"; break;
+        case CL_INVALID_BINARY: errorString = "Invalid binary"; break;
+        case CL_INVALID_BUILD_OPTIONS: errorString = "Invalid build options"; break;
+        case CL_INVALID_PROGRAM: errorString = "Invalid program"; break;
+        case CL_INVALID_PROGRAM_EXECUTABLE: errorString = "Invalid program executable"; break;
+        case CL_INVALID_KERNEL_NAME: errorString = "Invalid kernel name"; break;
+        case CL_INVALID_KERNEL_DEFINITION: errorString = "Invalid kernel definition"; break;
+        case CL_INVALID_KERNEL: errorString = "Invalid kernel"; break;
+        case CL_INVALID_ARG_INDEX: errorString = "Invalid argument index"; break;
+        case CL_INVALID_ARG_VALUE: errorString = "Invalid argument value"; break;
+        case CL_INVALID_ARG_SIZE: errorString = "Invalid argument size"; break;
+        case CL_INVALID_KERNEL_ARGS: errorString = "Invalid kernel arguments"; break;
+        case CL_INVALID_WORK_DIMENSION: errorString = "Invalid work dimension"; break;
+        case CL_INVALID_WORK_GROUP_SIZE: errorString = "Invalid work group size"; break;
+        case CL_INVALID_WORK_ITEM_SIZE: errorString = "Invalid work item size"; break;
+        case CL_INVALID_GLOBAL_OFFSET: errorString = "Invalid global offset"; break;
+        case CL_INVALID_EVENT_WAIT_LIST: errorString = "Invalid event wait list"; break;
+        case CL_INVALID_EVENT: errorString = "Invalid event"; break;
+        case CL_INVALID_OPERATION: errorString = "Invalid operation"; break;
+        case CL_INVALID_GL_OBJECT: errorString = "Invalid OpenGL object"; break;
+        case CL_INVALID_BUFFER_SIZE: errorString = "Invalid buffer size"; break;
+        case CL_INVALID_MIP_LEVEL: errorString = "Invalid MIP level"; break;
+        default: errorString = "Unknown error"; break;
+    }
+    std::cerr << "OpenCL Error during " << operation << ": " << errorString << " (Code: " << err << ")" << std::endl;
+}
+
 bool GameOfLife::initializeOpenCL() {
     if (openclInitialized) return true;
     
     cl_int err = CL_SUCCESS;
     
-    // Get platform
     cl_uint numPlatforms = 0;
     err = clGetPlatformIDs(0, nullptr, &numPlatforms);
     if (err != CL_SUCCESS || numPlatforms == 0) {
-        std::cerr << "Failed to find any OpenCL platforms." << std::endl;
+        printCLError(err, "getting platform count");
         return false;
     }
 
     std::vector<cl_platform_id> platforms(numPlatforms);
     err = clGetPlatformIDs(numPlatforms, platforms.data(), nullptr);
-    cl_platform_id platform = platforms[0];
-
-    // Get device
-    cl_uint numDevices = 0;
-    err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
-    std::vector<cl_device_id> devices;
-    
-    if (numDevices == 0) {
-        // Try CPU if no GPU is available
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, 0, nullptr, &numDevices);
-        if (numDevices == 0) {
-            std::cerr << "No OpenCL devices found." << std::endl;
-            return false;
-        }
-        devices.resize(numDevices);
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, numDevices, devices.data(), nullptr);
-    } else {
-        devices.resize(numDevices);
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, numDevices, devices.data(), nullptr);
+    if (err != CL_SUCCESS) {
+        printCLError(err, "getting platform IDs");
+        return false;
     }
     
-    device = devices[0];
+    char platformName[128];
+    clGetPlatformInfo(platforms[0], CL_PLATFORM_NAME, sizeof(platformName), platformName, NULL);
+    std::cout << "Using OpenCL platform: " << platformName << std::endl;
+    
+    cl_platform_id platform = platforms[0];
 
-    // Create context
+    cl_uint numDevices = 0;
+    err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
+    
+    if (err != CL_SUCCESS || numDevices == 0) {
+        std::cout << "No GPU found, trying CPU device..." << std::endl;
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, 0, nullptr, &numDevices);
+        if (err != CL_SUCCESS || numDevices == 0) {
+            printCLError(err, "finding any OpenCL devices");
+            return false;
+        }
+        
+        std::vector<cl_device_id> devices(numDevices);
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, numDevices, devices.data(), nullptr);
+        if (err != CL_SUCCESS) {
+            printCLError(err, "getting CPU device IDs");
+            return false;
+        }
+        device = devices[0];
+        
+        char deviceName[128];
+        clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(deviceName), deviceName, NULL);
+        std::cout << "Using CPU device: " << deviceName << std::endl;
+    } else {
+        std::vector<cl_device_id> devices(numDevices);
+        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, numDevices, devices.data(), nullptr);
+        if (err != CL_SUCCESS) {
+            printCLError(err, "getting GPU device IDs");
+            return false;
+        }
+        device = devices[0];
+        
+        char deviceName[128];
+        clGetDeviceInfo(device, CL_DEVICE_NAME, sizeof(deviceName), deviceName, NULL);
+        std::cout << "Using GPU device: " << deviceName << std::endl;
+    }
+
     context = clCreateContext(nullptr, 1, &device, nullptr, nullptr, &err);
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to create OpenCL context." << std::endl;
+        printCLError(err, "creating context");
         return false;
     }
 
-    // Create command queue - use OpenCL 1.2 version
-    // Replace clCreateCommandQueueWithProperties with clCreateCommandQueue
     queue = clCreateCommandQueue(context, device, 0, &err);
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to create command queue." << std::endl;
+        printCLError(err, "creating command queue");
         cleanupOpenCL();
         return false;
     }
 
-    // Create program
     const char* source = golKernelSource;
     size_t sourceSize = std::strlen(source);
     program = clCreateProgramWithSource(context, 1, &source, &sourceSize, &err);
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to create program." << std::endl;
+        printCLError(err, "creating program");
         cleanupOpenCL();
         return false;
     }
 
-    // Build program
     err = clBuildProgram(program, 1, &device, nullptr, nullptr, nullptr);
     if (err != CL_SUCCESS) {
         size_t logSize;
         clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, 0, nullptr, &logSize);
         std::string buildLog(logSize, ' ');
         clGetProgramBuildInfo(program, device, CL_PROGRAM_BUILD_LOG, logSize, &buildLog[0], nullptr);
-        std::cerr << "Build error:\n" << buildLog << std::endl;
+        std::cerr << "OpenCL Build error:\n" << buildLog << std::endl;
         cleanupOpenCL();
         return false;
     }
 
-    // Create kernel
     kernel = clCreateKernel(program, "evolveToroidal", &err);
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to create kernel." << std::endl;
+        printCLError(err, "creating kernel");
         cleanupOpenCL();
         return false;
     }
 
-    // Set fixed kernel arguments
     err = clSetKernelArg(kernel, 2, sizeof(int), &m_width);
-    err |= clSetKernelArg(kernel, 3, sizeof(int), &m_height);
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to set kernel arguments." << std::endl;
+        printCLError(err, "setting width kernel argument");
+        cleanupOpenCL();
+        return false;
+    }
+    
+    err = clSetKernelArg(kernel, 3, sizeof(int), &m_height);
+    if (err != CL_SUCCESS) {
+        printCLError(err, "setting height kernel argument");
         cleanupOpenCL();
         return false;
     }
@@ -301,81 +380,204 @@ void GameOfLife::cleanupOpenCL() {
     openclInitialized = false;
 }
 
-bool GameOfLife::evolveOpenCL(int generations) {
-    if (!initializeOpenCL()) {
-        return false;
-    }
-    
+bool GameOfLife::createOpenCLBuffers(cl_mem& inBuffer, cl_mem& outBuffer, size_t gridSize) {
     cl_int err = CL_SUCCESS;
-    size_t gridSize = m_width * m_height;
     
-    currentBuffer = clCreateBuffer(
+    inBuffer = clCreateBuffer(
         context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
         sizeof(int) * gridSize, m_currentGrid.data(), &err
     );
+    
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to create current buffer." << std::endl;
-        cleanupOpenCL();
+        printCLError(err, "creating input buffer");
         return false;
     }
     
-    nextBuffer = clCreateBuffer(
-        context, CL_MEM_READ_WRITE, sizeof(int) * gridSize, nullptr, &err
+    outBuffer = clCreateBuffer(
+        context, CL_MEM_READ_WRITE, 
+        sizeof(int) * gridSize, nullptr, &err
     );
+    
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to create next buffer." << std::endl;
-        if (currentBuffer) clReleaseMemObject(currentBuffer);
-        cleanupOpenCL();
+        printCLError(err, "creating output buffer");
+        clReleaseMemObject(inBuffer);
+        return false;
+    }
+    
+    return true;
+}
+
+bool GameOfLife::runOpenCLKernel(cl_mem inBuffer, cl_mem outBuffer) {
+    cl_int err = CL_SUCCESS;
+    
+    err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &inBuffer);
+    if (err != CL_SUCCESS) {
+        printCLError(err, "setting input buffer argument");
+        return false;
+    }
+    
+    err = clSetKernelArg(kernel, 1, sizeof(cl_mem), &outBuffer);
+    if (err != CL_SUCCESS) {
+        printCLError(err, "setting output buffer argument");
         return false;
     }
     
     size_t globalWorkSize[2] = { m_width, m_height };
     
-    err = clSetKernelArg(kernel, 2, sizeof(int), &m_width);
-    err |= clSetKernelArg(kernel, 3, sizeof(int), &m_height);
+    size_t maxWorkItems[3];
+    err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_ITEM_SIZES, 
+                        sizeof(maxWorkItems), maxWorkItems, NULL);
     if (err != CL_SUCCESS) {
-        std::cerr << "Failed to set kernel arguments." << std::endl;
-        cleanupOpenCL();
+        printCLError(err, "getting device work item sizes");
         return false;
     }
     
+    if (globalWorkSize[0] > maxWorkItems[0]) globalWorkSize[0] = maxWorkItems[0];
+    if (globalWorkSize[1] > maxWorkItems[1]) globalWorkSize[1] = maxWorkItems[1];
+    
+    err = clEnqueueNDRangeKernel(
+        queue, kernel, 2, nullptr, 
+        globalWorkSize, nullptr, 
+        0, nullptr, nullptr
+    );
+    
+    if (err != CL_SUCCESS) {
+        printCLError(err, "enqueueing kernel");
+        return false;
+    }
+    
+    err = clFinish(queue);
+    if (err != CL_SUCCESS) {
+        printCLError(err, "waiting for kernel completion");
+        return false;
+    }
+    
+    return true;
+}
+
+bool GameOfLife::readOpenCLResults(cl_mem buffer, size_t gridSize) {
+    cl_int err = clEnqueueReadBuffer(
+        queue, buffer, CL_TRUE, 0,
+        sizeof(int) * gridSize, m_currentGrid.data(),
+        0, nullptr, nullptr
+    );
+    
+    if (err != CL_SUCCESS) {
+        printCLError(err, "reading results");
+        return false;
+    }
+    
+    return true;
+}
+
+bool GameOfLife::evolveOpenCL(int generations) {
+    trace_log("evolveOpenCL called with " + std::to_string(generations) + " generations");
+    std::cout << "Starting OpenCL evolution for " << generations << " generations..." << std::endl;
+    
+    if (m_width == 0 || m_height == 0) {
+        trace_log("Error: Invalid grid dimensions");
+        std::cerr << "Invalid grid dimensions for OpenCL evolution" << std::endl;
+        return false;
+    }
+
+    // Only initialize OpenCL when needed
+    trace_log("Initializing OpenCL...");
+    if (!initializeOpenCL()) {
+        trace_log("Error: Failed to initialize OpenCL");
+        std::cerr << "Failed to initialize OpenCL" << std::endl;
+        return false;
+    }
+    trace_log("OpenCL initialized successfully");
+    
+    // Print device capabilities for debugging
+    size_t maxWorkGroupSize;
+    clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, 
+                    sizeof(size_t), &maxWorkGroupSize, NULL);
+    trace_log("Device info - Max work group size: " + std::to_string(maxWorkGroupSize));
+    std::cout << "Device info - Max work group size: " << maxWorkGroupSize << std::endl;
+    
+    size_t gridSize = m_width * m_height;
+    trace_log("Grid size: " + std::to_string(m_width) + "x" + std::to_string(m_height) + " = " + std::to_string(gridSize) + " cells");
+    std::cout << "Grid size: " << m_width << "x" << m_height << " = " << gridSize << " cells" << std::endl;
+    
+    // Create OpenCL buffers
+    trace_log("Creating OpenCL buffers...");
+    cl_mem inBuffer = nullptr, outBuffer = nullptr;
+    if (!createOpenCLBuffers(inBuffer, outBuffer, gridSize)) {
+        trace_log("Error: Failed to create OpenCL buffers");
+        std::cerr << "Failed to create OpenCL buffers" << std::endl;
+        return false;
+    }
+    trace_log("OpenCL buffers created successfully");
+    
+    std::cout << "Starting evolution loop..." << std::endl;
+    trace_log("Starting evolution loop...");
+    
+    // Check if we want to print intermediate generations
+    bool shouldPrintGenerations = false;
+    extern bool g_printAfterGeneration;  
+    extern int g_delayMs;                
+    shouldPrintGenerations = g_printAfterGeneration;
+    trace_log("Print after generation: " + std::string(shouldPrintGenerations ? "true" : "false"));
+
     for (int i = 0; i < generations; i++) {
-        err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &currentBuffer);
-        err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &nextBuffer);
-        if (err != CL_SUCCESS) {
-            std::cerr << "Failed to set kernel arguments for iteration." << std::endl;
-            if (currentBuffer) clReleaseMemObject(currentBuffer);
-            if (nextBuffer) clReleaseMemObject(nextBuffer);
+        trace_log("Generation " + std::to_string(i+1) + " of " + std::to_string(generations));
+        
+        // Execute the kernel with current buffers
+        if (!runOpenCLKernel(inBuffer, outBuffer)) {
+            trace_log("Error: Failed to run OpenCL kernel for generation " + std::to_string(i+1));
+            std::cerr << "Failed to run OpenCL kernel for generation " << i+1 << std::endl;
+            clReleaseMemObject(inBuffer);
+            clReleaseMemObject(outBuffer);
             return false;
         }
         
-        err = clEnqueueNDRangeKernel(queue, kernel, 2, nullptr, globalWorkSize, nullptr, 0, nullptr, nullptr);
-        if (err != CL_SUCCESS) {
-            std::cerr << "Failed to execute kernel." << std::endl;
-            if (currentBuffer) clReleaseMemObject(currentBuffer);
-            if (nextBuffer) clReleaseMemObject(nextBuffer);
-            return false;
+        if (shouldPrintGenerations) {
+            trace_log("Reading back intermediate results for display");
+            if (!readOpenCLResults(outBuffer, gridSize)) {
+                trace_log("Error: Failed to read results for intermediate generation");
+                std::cerr << "Failed to read results for intermediate generation" << std::endl;
+                clReleaseMemObject(inBuffer);
+                clReleaseMemObject(outBuffer);
+                return false;
+            }
+            
+            print();
+            
+            if (g_delayMs > 0) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(g_delayMs));
+            }
         }
         
-        clFinish(queue);
-        
-        cl_mem temp = currentBuffer;
-        currentBuffer = nextBuffer;
-        nextBuffer = temp;
+        if (i < generations - 1) {
+            trace_log("Swapping buffers for next generation");
+            cl_mem temp = inBuffer;
+            inBuffer = outBuffer;
+            outBuffer = temp;
+        }
     }
     
-    err = clEnqueueReadBuffer(queue, currentBuffer, CL_TRUE, 0, sizeof(int) * gridSize, m_currentGrid.data(), 0, nullptr, nullptr);
-    if (err != CL_SUCCESS) {
-        std::cerr << "Failed to read back results." << std::endl;
-        if (currentBuffer) clReleaseMemObject(currentBuffer);
-        if (nextBuffer) clReleaseMemObject(nextBuffer);
-        return false;
+    trace_log("Evolution loop completed, reading results...");
+    std::cout << "Evolution loop completed, reading results..." << std::endl;
+    
+    if (!shouldPrintGenerations) {
+        trace_log("Reading final results");
+        if (!readOpenCLResults(outBuffer, gridSize)) {
+            trace_log("Error: Failed to read OpenCL results");
+            std::cerr << "Failed to read OpenCL results" << std::endl;
+            clReleaseMemObject(inBuffer);
+            clReleaseMemObject(outBuffer);
+            return false;
+        }
     }
     
-    if (currentBuffer) clReleaseMemObject(currentBuffer);
-    if (nextBuffer) clReleaseMemObject(nextBuffer);
-    currentBuffer = nextBuffer = nullptr;
+    // Clean up
+    trace_log("Releasing OpenCL buffer objects");
+    clReleaseMemObject(inBuffer);
+    clReleaseMemObject(outBuffer);
     
+    trace_log("OpenCL evolution completed successfully");
+    std::cout << "OpenCL evolution completed successfully" << std::endl;
     return true;
 }
 

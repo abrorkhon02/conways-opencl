@@ -1,16 +1,7 @@
-#ifndef CLI_H
-#define CLI_H
-
-#include "GameOfLife.h"
-#include <string>
+#pragma once
+#include "../include/GameOfLife.h"
 
 class CLI {
-public:
-    CLI();
-    ~CLI();
-
-    void run();
-
 private:
     GameOfLife* world;
     bool printAfterGeneration;
@@ -31,6 +22,9 @@ private:
     void addBeacon();
     void addMethuselah();
     bool parseCoordinates(const std::string& input, size_t& x, size_t& y);
-};
 
-#endif
+public:
+    CLI();
+    ~CLI();
+    void run();
+};

@@ -26,7 +26,9 @@ int main() {
         try {
             GameOfLife world(width, height);
             world.randomize(0.3);
+            
             auto start = std::chrono::steady_clock::now();
+            
             bool success = world.evolveOpenCL(generations);
             if (!success) {
                 std::cerr << "OpenCL evolution failed for " << width << "x" << height << " grid\n";

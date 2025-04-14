@@ -12,11 +12,11 @@ find_package(OpenCL REQUIRED)
 
 include_directories(${OpenCL_INCLUDE_DIRS})
 
-# Main game of life executable
 add_executable(game_of_life
     src/main.cpp
     src/CLI.cpp
     src/GameOfLife.cpp
+    src/SharedGlobals.cpp
 )
 target_include_directories(game_of_life PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -24,10 +24,10 @@ target_include_directories(game_of_life PUBLIC
 target_include_directories(game_of_life PRIVATE ${OpenCL_INCLUDE_DIRS})
 target_link_libraries(game_of_life PRIVATE ${OpenCL_LIBRARIES})
 
-# Performance measurement executable
 add_executable(performance_measure
     src/performance_measure.cpp
     src/GameOfLife.cpp
+    src/SharedGlobals.cpp
 )
 target_include_directories(performance_measure PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
